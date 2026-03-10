@@ -1,6 +1,11 @@
 import { HeroSection } from "@/components/hero-section"
 import { RoiCalculator } from "@/components/roi-calculator"
 import { TrustBadges } from "@/components/trust-badges"
+import { TrustedByMarquee } from "@/components/trusted-by-marquee"
+import { OurImpact } from "@/components/our-impact"
+import { RecentProjects } from "@/components/recent-projects"
+import { ClientTestimonials } from "@/components/client-testimonials"
+import { IroncladGuarantee } from "@/components/ironclad-guarantee"
 import { Footer } from "@/components/footer"
 
 export default function Home() {
@@ -17,6 +22,11 @@ export default function Home() {
       </section>
 
       <TrustBadges />
+      <TrustedByMarquee />
+      <OurImpact />
+      <RecentProjects />
+      <ClientTestimonials />
+      <IroncladGuarantee />
       <Footer />
     </main>
   )
