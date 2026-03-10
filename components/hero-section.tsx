@@ -1,5 +1,6 @@
 import { ArrowDown, TrendingUp, Zap, Target } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 export function HeroSection() {
   return (
@@ -8,7 +9,18 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/5 blur-3xl rounded-full" />
       
-      <div className="relative container mx-auto px-4 pt-20 pb-16 md:pt-32 md:pb-24">
+      <div className="relative container mx-auto px-4 pt-8 pb-16 md:pt-16 md:pb-24">
+        {/* Header with Logo */}
+        <div className="flex items-center justify-center mb-16">
+          <Image
+            src="/logos/barbieratto-header.png"
+            alt="Barbieratto"
+            width={140}
+            height={50}
+            className="h-12 w-auto object-contain"
+          />
+        </div>
+
         {/* Top Badge */}
         <div className="flex justify-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary text-sm font-medium">
