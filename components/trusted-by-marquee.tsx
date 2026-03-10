@@ -3,14 +3,21 @@
 import { useEffect, useRef, useState } from "react"
 
 const companies = [
-  { name: "Stripe", logo: "S" },
-  { name: "Figma", logo: "F" },
-  { name: "Vercel", logo: "V" },
-  { name: "Notion", logo: "N" },
-  { name: "Slack", logo: "SL" },
-  { name: "GitHub", logo: "GH" },
-  { name: "Framer", logo: "FR" },
-  { name: "Adobe", logo: "AD" },
+  { name: "Irroba", color: "#FF6B35" },
+  { name: "Shoppub", color: "#2E86AB" },
+  { name: "Vtex", color: "#FA7921" },
+  { name: "Nuvemshop", color: "#0066CC" },
+  { name: "SoftUp ERP", color: "#8B4513" },
+  { name: "Bling/", color: "#FF5722" },
+  { name: "Olist", color: "#FF6B9D" },
+  { name: "Pagar.me", color: "#0099FF" },
+  { name: "Mercado Pago", color: "#FFC300" },
+  { name: "PayPal", color: "#003087" },
+  { name: "RD Station", color: "#E74C3C" },
+  { name: "Flowbiz", color: "#1E90FF" },
+  { name: "Revi", color: "#9B59B6" },
+  { name: "Martz", color: "#E67E22" },
+  { name: "CartStack", color: "#27AE60" },
 ]
 
 export function TrustedByMarquee() {
@@ -45,7 +52,7 @@ export function TrustedByMarquee() {
         }`}
       >
         <p className="text-muted-foreground text-sm uppercase tracking-widest mb-8">
-          Confiado por empresas em todo o mundo
+          Parceiros integrados
         </p>
 
         {/* Marquee Container */}
@@ -59,18 +66,29 @@ export function TrustedByMarquee() {
           {/* Marquee Content */}
           <div className="flex animate-scroll">
             {[...Array(2)].map((_, index) => (
-              <div key={index} className="flex gap-8 md:gap-12 min-w-max px-4">
+              <div key={index} className="flex gap-6 md:gap-8 min-w-max px-4">
                 {companies.map((company) => (
                   <div
                     key={`${company.name}-${index}`}
-                    className="group flex items-center justify-center gap-3 px-6 py-4 rounded-lg border border-border/20 bg-card/30 hover:bg-card/60 transition-all duration-300 cursor-pointer hover:border-primary/50"
+                    className="group relative flex items-center justify-center px-6 py-4 rounded-lg border border-border/20 bg-card/30 hover:bg-card/60 transition-all duration-300 cursor-pointer hover:border-primary/30 min-w-max overflow-hidden"
                   >
-                    <div className="w-10 h-10 rounded-md bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-semibold text-primary/80 group-hover:text-primary transition-colors">
-                      {company.logo}
-                    </div>
-                    <span className="text-foreground font-medium text-sm group-hover:text-primary transition-colors whitespace-nowrap">
+                    {/* Grayscale Default State */}
+                    <div
+                      className={`flex items-center justify-center font-semibold text-sm transition-all duration-300 group-hover:opacity-0 absolute ${
+                        company.name.length > 12 ? "text-xs px-2" : ""
+                      }`}
+                      style={{ color: "#999999", filter: "grayscale(100%)" }}
+                    >
                       {company.name}
-                    </span>
+                    </div>
+
+                    {/* Color Hover State */}
+                    <div
+                      className="flex items-center justify-center font-semibold text-sm opacity-0 group-hover:opacity-100 transition-all duration-300"
+                      style={{ color: company.color }}
+                    >
+                      {company.name}
+                    </div>
                   </div>
                 ))}
               </div>

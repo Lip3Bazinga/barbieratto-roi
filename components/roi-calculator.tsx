@@ -101,7 +101,7 @@ export function RoiCalculator() {
   const isFormValid = niche && investment && revenue && selectedChannels.length > 0
 
   return (
-    <Card className="w-full max-w-2xl border-border/50 bg-card/80 backdrop-blur-sm">
+    <Card className="w-full max-w-2xl border-border bg-white/95 backdrop-blur-sm shadow-2xl">
       <CardHeader className="text-center pb-2">
         <div className="flex items-center justify-center gap-2 mb-2">
           <TrendingUp className="h-6 w-6 text-primary" />
@@ -109,7 +109,7 @@ export function RoiCalculator() {
             Calculadora de ROI
           </span>
         </div>
-        <CardTitle className="text-2xl md:text-3xl font-bold text-balance">
+        <CardTitle className="text-2xl md:text-3xl font-bold text-balance text-foreground">
           Descubra seu potencial de retorno
         </CardTitle>
         <CardDescription className="text-muted-foreground text-base">
@@ -148,7 +148,7 @@ export function RoiCalculator() {
             value={investment}
             onChange={handleInvestmentChange}
             placeholder="R$ 0,00"
-            className="flex h-12 w-full rounded-lg border border-border bg-input px-4 py-2 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
+            className="flex h-12 w-full rounded-lg border-2 border-border bg-white px-4 py-2 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-all shadow-sm"
           />
         </div>
 
@@ -163,7 +163,7 @@ export function RoiCalculator() {
             value={revenue}
             onChange={handleRevenueChange}
             placeholder="R$ 0,00"
-            className="flex h-12 w-full rounded-lg border border-border bg-input px-4 py-2 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
+            className="flex h-12 w-full rounded-lg border-2 border-border bg-white px-4 py-2 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-all shadow-sm"
           />
         </div>
 
@@ -204,7 +204,7 @@ export function RoiCalculator() {
         <Button
           onClick={calculateRoi}
           disabled={!isFormValid || isCalculating}
-          className="w-full h-14 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-all"
+          className="w-full h-14 text-lg font-semibold bg-primary hover:bg-primary/90 text-white transition-all shadow-lg hover:shadow-xl"
           size="lg"
         >
           {isCalculating ? (
@@ -246,7 +246,7 @@ export function RoiCalculator() {
 
               <Button
                 size="lg"
-                className="w-full sm:w-auto h-14 px-8 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-all"
+                className="w-full sm:w-auto h-14 px-8 text-lg font-semibold bg-primary hover:bg-primary/90 text-white transition-all shadow-lg hover:shadow-xl"
               >
                 <span className="flex items-center gap-2">
                   Quero esse resultado

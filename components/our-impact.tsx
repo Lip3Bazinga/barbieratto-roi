@@ -1,35 +1,37 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { TrendingUp, Users, Zap, Award } from "lucide-react"
 
 const metrics = [
   {
-    icon: TrendingUp,
-    value: "R$ 50M+",
-    label: "Faturamento gerado",
+    value: "15",
+    label: "anos de história",
+    suffix: "+",
   },
   {
-    icon: Users,
-    value: "98%",
-    label: "Taxa de sucesso",
+    value: "300",
+    label: "clientes atendidos",
+    suffix: "+",
   },
   {
-    icon: Zap,
-    value: "3.5x",
-    label: "ROI médio",
+    value: "100",
+    label: "milhões faturados",
+    suffix: "+",
   },
   {
-    icon: Award,
-    value: "500+",
-    label: "Clientes satisfeitos",
+    value: "60",
+    label: "especialistas dedicados",
+    suffix: "+",
   },
 ]
 
 function AnimatedCounter({ end, suffix = "" }: { end: number; suffix?: string }) {
   const [count, setCount] = useState(0)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    if (!isVisible) return
+
     const duration = 2000
     const steps = 60
     const increment = end / steps
@@ -46,13 +48,13 @@ function AnimatedCounter({ end, suffix = "" }: { end: number; suffix?: string })
     }, duration / steps)
 
     return () => clearInterval(timer)
-  }, [end])
+  }, [end, isVisible])
 
   return (
-    <>
+    <span onIntersection={() => setIsVisible(true)}>
       {count}
       {suffix}
-    </>
+    </span>
   )
 }
 
@@ -79,9 +81,7 @@ export function OurImpact() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative py-20 md:py-32">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
-
+    <section ref={sectionRef} className="relative py-20 md:py-32 bg-background">
       <div className="container relative mx-auto px-4">
         {/* Header */}
         <div
@@ -89,21 +89,20 @@ export function OurImpact() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <p className="text-primary text-sm uppercase tracking-widest mb-4">
-            Nosso impacto
+          <p className="text-primary text-sm uppercase tracking-widest mb-4 font-semibold">
+            Resultados reais
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Resultados que falam por si só
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">
+            Resultados reais, histórias comprovadas
           </h2>
           <p className="text-muted-foreground text-lg">
-            Números reais de empresas que escalaram seus negócios com nossa metodologia
+            Junte-se a nós e impulsione suas vendas!
           </p>
         </div>
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {metrics.map((metric, index) => {
-            const Icon = metric.icon
             const isHovered = hoveredIndex === index
 
             return (
@@ -111,12 +110,12 @@ export function OurImpact() {
                 key={index}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                className={`group relative p-8 rounded-xl border transition-all duration-300 transform ${
+                className={`group relative p-8 rounded-lg border transition-all duration-300 transform overflow-hidden ${
                   isVisible ? "opacity-100" : "opacity-0"
                 } ${
                   isHovered
-                    ? "border-primary/50 bg-card/80 scale-105 shadow-2xl"
-                    : "border-border/30 bg-card/40 scale-100 shadow-lg"
+                    ? "border-primary/50 bg-white scale-105 shadow-2xl"
+                    : "border-border bg-card scale-100 shadow-md"
                 }`}
                 style={{
                   transitionDelay: isVisible ? `${index * 100}ms` : "0ms",
@@ -127,63 +126,57 @@ export function OurImpact() {
                   transformStyle: "preserve-3d",
                 }}
               >
-                {/* Background Glow */}
+                {/* Metallic Shine Effect */}
                 <div
-                  className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-                    isHovered ? "bg-primary/5" : ""
+                  className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${
+                    isHovered ? "bg-gradient-to-r from-transparent via-white to-transparent" : ""
                   }`}
+                  style={{
+                    animation: isHovered ? "shimmer 2s infinite" : "none",
+                  }}
                 />
 
                 {/* Content */}
                 <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <Icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <div
-                      className={`text-2xl font-bold transition-all duration-300 ${
-                        isHovered ? "text-primary" : "text-muted-foreground"
-                      }`}
-                    >
-                      ↗
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-3xl md:text-4xl font-bold text-foreground">
+                  <div className="space-y-3">
+                    <p className="text-5xl md:text-6xl font-bold text-foreground tracking-tight">
                       {isVisible ? (
-                        <AnimatedCounter
-                          end={
-                            index === 0
-                              ? 50
-                              : index === 1
-                                ? 98
-                                : index === 2
-                                  ? 3
-                                  : 500
-                          }
-                          suffix={
-                            index === 0
-                              ? "M+"
-                              : index === 1
-                                ? "%"
-                                : index === 2
-                                  ? "x"
-                                  : "+"
-                          }
-                        />
+                        <>
+                          {metric.value}
+                          <span className="text-primary">{metric.suffix}</span>
+                        </>
                       ) : (
                         "0"
                       )}
                     </p>
-                    <p className="text-muted-foreground text-sm">{metric.label}</p>
+                    <p className="text-muted-foreground text-sm uppercase tracking-wider font-medium">
+                      {metric.label}
+                    </p>
                   </div>
                 </div>
+
+                {/* Bottom accent bar */}
+                <div
+                  className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r from-primary to-transparent transition-all duration-300 ${
+                    isHovered ? "w-full" : "w-0"
+                  }`}
+                />
               </div>
             )
           })}
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+      `}</style>
     </section>
   )
 }

@@ -28,11 +28,10 @@ export function IroncladGuarantee() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-20 md:py-32 overflow-hidden"
+      className="relative py-20 md:py-32 overflow-hidden bg-background"
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 blur-3xl rounded-full" />
+      {/* Subtle Background */}
+      <div className="absolute inset-0" />
 
       <div className="container relative mx-auto px-4">
         <div
@@ -40,17 +39,25 @@ export function IroncladGuarantee() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          {/* Main Card */}
-          <div className="relative group rounded-3xl overflow-hidden border-2 border-primary/30 hover:border-primary/60 transition-all duration-500">
-            {/* Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-card to-card" />
+          {/* Main Card - Polished Metal Effect */}
+          <div className="relative group rounded-2xl overflow-hidden border-2 border-primary/60 hover:border-primary/100 transition-all duration-500 shadow-2xl">
+            {/* Metallic Gradient Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-white to-slate-50" />
+
+            {/* Chrome/Metallic Shine */}
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-40 transition-opacity duration-500"
+              style={{
+                background: "linear-gradient(135deg, rgba(255,255,255,0.6) 0%, transparent 50%, rgba(0,0,0,0.1) 100%)",
+              }}
+            />
 
             {/* Content */}
             <div className="relative z-10 p-12 md:p-16">
               {/* Top Section with Shield */}
               <div className="flex items-start justify-between mb-12">
                 <div className="flex-1">
-                  <p className="text-primary text-sm uppercase tracking-widest mb-4">
+                  <p className="text-primary text-sm uppercase tracking-widest mb-4 font-bold">
                     Garantia de resultados
                   </p>
                   <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
@@ -61,28 +68,25 @@ export function IroncladGuarantee() {
                   </p>
                 </div>
 
-                {/* 3D Shield Icon */}
+                {/* 3D Metal Shield Icon */}
                 <div className="relative hidden md:flex items-center justify-center flex-shrink-0">
                   <div className="relative w-32 h-32">
-                    {/* Outer Glow */}
+                    {/* Metal Shield with 3D Effect */}
                     <div
-                      className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/40 to-primary/10 blur-2xl"
+                      className="absolute inset-0 rounded-full bg-gradient-to-br from-gray-200 via-white to-gray-100 shadow-2xl flex items-center justify-center"
                       style={{
-                        animation: "pulse 3s ease-in-out infinite",
+                        boxShadow: "inset -2px -2px 5px rgba(0,0,0,0.2), inset 2px 2px 5px rgba(255,255,255,0.8), 0 10px 20px rgba(0,0,0,0.15)",
                       }}
-                    />
-
-                    {/* Shield */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Shield className="w-24 h-24 text-primary drop-shadow-lg" />
+                    >
+                      <Shield className="w-20 h-20 text-primary" />
                     </div>
 
                     {/* Shine Effect */}
                     <div
                       className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%, rgba(255,255,255,0.1) 100%)",
+                        background: "linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 50%, rgba(255,255,255,0.1) 100%)",
+                        animation: "shine 3s ease-in-out infinite",
                       }}
                     />
                   </div>
@@ -90,7 +94,7 @@ export function IroncladGuarantee() {
               </div>
 
               {/* Guarantee Points */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 pt-8 border-t border-border/30">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 pt-8 border-t-2 border-primary/20">
                 {[
                   {
                     icon: <CheckCircle className="w-6 h-6" />,
@@ -110,7 +114,7 @@ export function IroncladGuarantee() {
                 ].map((point, index) => (
                   <div
                     key={index}
-                    className={`p-6 rounded-xl border border-primary/10 bg-primary/5 hover:bg-primary/10 transition-all duration-300 group/item ${
+                    className={`p-6 rounded-xl border-2 border-primary/20 bg-white hover:bg-primary/5 hover:border-primary/40 transition-all duration-300 group/item shadow-md hover:shadow-lg ${
                       isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                     }`}
                     style={{
@@ -138,14 +142,14 @@ export function IroncladGuarantee() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
                 <Button
                   size="lg"
-                  className="h-14 px-8 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                  className="h-14 px-8 text-lg font-semibold bg-primary hover:bg-primary/90 text-white transition-all shadow-lg hover:shadow-xl hover:scale-105"
                 >
                   Iniciar Agora - Sem Risco
                 </Button>
                 <Button
                   variant="outline"
                   size="lg"
-                  className="h-14 px-8 text-lg font-semibold border-primary/30 hover:border-primary/60 hover:bg-card/80 transition-all"
+                  className="h-14 px-8 text-lg font-semibold border-2 border-primary/40 text-foreground hover:border-primary/80 hover:bg-white transition-all"
                 >
                   Falar com Especialista
                 </Button>
@@ -156,28 +160,17 @@ export function IroncladGuarantee() {
                 Garantia válida para clientes que implementarem totalmente a metodologia e seguirem as recomendações da equipe.
               </p>
             </div>
-
-            {/* Border Glow */}
-            <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-              style={{
-                background:
-                  "radial-gradient(circle at top right, rgba(34, 197, 94, 0.2) 0%, transparent 50%)",
-              }}
-            />
           </div>
         </div>
       </div>
 
       <style>{`
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-            transform: scale(1);
+        @keyframes shine {
+          0% {
+            transform: translateX(-100%);
           }
-          50% {
-            opacity: 0.8;
-            transform: scale(1.05);
+          100% {
+            transform: translateX(100%);
           }
         }
       `}</style>
