@@ -29,6 +29,11 @@ const certifications = [
     name: "TikTok Ads",
     logo: "/logos/tiktok-ads.jpg",
   },
+  {
+    id: "barbieratto",
+    name: "Barbieratto",
+    logo: "/logos/barbieratto.jpg",
+  },
 ]
 
 export function CertificationsRow() {
