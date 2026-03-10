@@ -7,13 +7,13 @@ export function HeroSection() {
     <section className="relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/5 blur-3xl rounded-full" />
-      
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[600px] bg-primary/5 blur-3xl rounded-full" />
+
       <div className="relative container mx-auto px-4 pt-8 pb-16 md:pt-16 md:pb-24">
         {/* Header with Logo */}
         <div className="flex items-center justify-center mb-16">
           <div
-            className="relative flex items-center justify-center w-full py-4"
+            className="relative flex items-center justify-center px-6 py-3 rounded-lg"
             style={{
               background: "linear-gradient(90deg, #000000, #2a2a2a, #111111, #3a3a3a, #000000)",
               backgroundSize: "300% 100%",
@@ -23,9 +23,9 @@ export function HeroSection() {
             <Image
               src="/logos/barbieratto-header.png"
               alt="Barbieratto"
-              width={200}
-              height={70}
-              className="h-14 w-auto object-contain relative z-10"
+              width={140}
+              height={50}
+              className="h-10 w-auto object-contain relative z-10"
             />
           </div>
 
@@ -53,9 +53,9 @@ export function HeroSection() {
             <span className="text-primary">maximize seu ROI</span>{" "}
             com marketing de performance
           </h1>
-          
+
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Descubra quanto sua empresa pode faturar utilizando estratégias 
+            Descubra quanto sua empresa pode faturar utilizando estratégias
             inteligentes de aquisição. Calcule seu potencial de retorno agora.
           </p>
         </div>
