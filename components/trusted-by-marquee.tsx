@@ -71,14 +71,15 @@ export function TrustedByMarquee() {
                 {companies.map((company) => (
                   <div
                     key={`${company.name}-${index}`}
-                    className="group relative flex items-center justify-center px-6 py-4 rounded-lg border border-border/40 bg-white hover:bg-white transition-all duration-300 cursor-pointer hover:border-primary/60 hover:shadow-lg min-w-max overflow-hidden grayscale hover:grayscale-0"
+                    className="group relative flex items-center justify-center rounded-xl border border-border/40 bg-white hover:bg-white transition-all duration-300 cursor-pointer hover:border-primary/60 hover:shadow-lg overflow-hidden grayscale hover:grayscale-0"
+                    style={{ width: "180px", height: "90px" }}
                   >
                     <Image
                       src={company.logo}
                       alt={company.name}
-                      width={120}
-                      height={50}
-                      className="object-contain h-12 w-auto"
+                      width={160}
+                      height={70}
+                      className="object-contain w-full h-full p-4"
                     />
                   </div>
                 ))}

@@ -25,33 +25,33 @@ const metrics = [
   },
 ]
 
-function AnimatedCounter({ end, suffix = "" }: { end: number; suffix?: string }) {
+function AnimatedCounter({ end, suffix = "", triggered }: { end: number; suffix?: string; triggered: boolean }) {
   const [count, setCount] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    if (!isVisible) return
+    if (!triggered) return
 
     const duration = 2000
-    const steps = 60
-    const increment = end / steps
-    let currentCount = 0
+    const steps = 80
+    let currentStep = 0
 
     const timer = setInterval(() => {
-      currentCount += increment
-      if (currentCount >= end) {
+      currentStep++
+      const progress = currentStep / steps
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCount(Math.floor(eased * end))
+      if (currentStep >= steps) {
         setCount(end)
         clearInterval(timer)
-      } else {
-        setCount(Math.floor(currentCount))
       }
     }, duration / steps)
 
     return () => clearInterval(timer)
-  }, [end, isVisible])
+  }, [end, triggered])
 
   return (
-    <span onIntersection={() => setIsVisible(true)}>
+    <span>
       {count}
       {suffix}
     </span>
@@ -140,14 +140,11 @@ export function OurImpact() {
                 <div className="relative z-10">
                   <div className="space-y-3">
                     <p className="text-5xl md:text-6xl font-bold text-foreground tracking-tight">
-                      {isVisible ? (
-                        <>
-                          {metric.value}
-                          <span className="text-primary">{metric.suffix}</span>
-                        </>
-                      ) : (
-                        "0"
-                      )}
+                      <AnimatedCounter
+                        end={Number(metric.value)}
+                        suffix={metric.suffix}
+                        triggered={isVisible}
+                      />
                     </p>
                     <p className="text-muted-foreground text-sm uppercase tracking-wider font-medium">
                       {metric.label}
