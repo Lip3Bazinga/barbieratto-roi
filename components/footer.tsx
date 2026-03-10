@@ -7,7 +7,14 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="relative overflow-hidden rounded-lg">
+            <div
+              className="relative flex items-center justify-center px-6 py-3 rounded-lg"
+              style={{
+                background: "linear-gradient(90deg, #000000, #2a2a2a, #111111, #3a3a3a, #000000)",
+                backgroundSize: "300% 100%",
+                animation: "logo-gradient-sweep 4s ease-in-out infinite",
+              }}
+            >
               <Image
                 src="/logos/barbieratto-header.png"
                 alt="Barbieratto"
@@ -15,27 +22,13 @@ export function Footer() {
                 height={50}
                 className="h-10 w-auto object-contain relative z-10"
               />
-              {/* Animated Gradient Overlay */}
-              <div
-                className="absolute inset-0 opacity-60 pointer-events-none"
-                style={{
-                  background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.5), transparent)",
-                  animation: "gradient-shimmer 3s ease-in-out infinite",
-                }}
-              />
             </div>
 
             <style>{`
-              @keyframes gradient-shimmer {
-                0% {
-                  transform: translateX(-100%);
-                }
-                50% {
-                  transform: translateX(100%);
-                }
-                100% {
-                  transform: translateX(-100%);
-                }
+              @keyframes logo-gradient-sweep {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
               }
             `}</style>
           </div>

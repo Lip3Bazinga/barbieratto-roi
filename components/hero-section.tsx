@@ -12,35 +12,28 @@ export function HeroSection() {
       <div className="relative container mx-auto px-4 pt-8 pb-16 md:pt-16 md:pb-24">
         {/* Header with Logo */}
         <div className="flex items-center justify-center mb-16">
-          <div className="relative overflow-hidden rounded-lg">
+          <div
+            className="relative flex items-center justify-center w-full py-4"
+            style={{
+              background: "linear-gradient(90deg, #000000, #2a2a2a, #111111, #3a3a3a, #000000)",
+              backgroundSize: "300% 100%",
+              animation: "logo-gradient-sweep 4s ease-in-out infinite",
+            }}
+          >
             <Image
               src="/logos/barbieratto-header.png"
               alt="Barbieratto"
-              width={140}
-              height={50}
-              className="h-12 w-auto object-contain relative z-10"
-            />
-            {/* Animated Gradient Overlay */}
-            <div
-              className="absolute inset-0 opacity-60 pointer-events-none"
-              style={{
-                background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.5), transparent)",
-                animation: "gradient-shimmer 3s ease-in-out infinite",
-              }}
+              width={200}
+              height={70}
+              className="h-14 w-auto object-contain relative z-10"
             />
           </div>
 
           <style>{`
-            @keyframes gradient-shimmer {
-              0% {
-                transform: translateX(-100%);
-              }
-              50% {
-                transform: translateX(100%);
-              }
-              100% {
-                transform: translateX(-100%);
-              }
+            @keyframes logo-gradient-sweep {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
             }
           `}</style>
         </div>
