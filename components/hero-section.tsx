@@ -12,13 +12,37 @@ export function HeroSection() {
       <div className="relative container mx-auto px-4 pt-8 pb-16 md:pt-16 md:pb-24">
         {/* Header with Logo */}
         <div className="flex items-center justify-center mb-16">
-          <Image
-            src="/logos/barbieratto-header.png"
-            alt="Barbieratto"
-            width={140}
-            height={50}
-            className="h-12 w-auto object-contain"
-          />
+          <div className="relative overflow-hidden rounded-lg">
+            <Image
+              src="/logos/barbieratto-header.png"
+              alt="Barbieratto"
+              width={140}
+              height={50}
+              className="h-12 w-auto object-contain relative z-10"
+            />
+            {/* Animated Gradient Overlay */}
+            <div
+              className="absolute inset-0 opacity-60 pointer-events-none"
+              style={{
+                background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.5), transparent)",
+                animation: "gradient-shimmer 3s ease-in-out infinite",
+              }}
+            />
+          </div>
+
+          <style>{`
+            @keyframes gradient-shimmer {
+              0% {
+                transform: translateX(-100%);
+              }
+              50% {
+                transform: translateX(100%);
+              }
+              100% {
+                transform: translateX(-100%);
+              }
+            }
+          `}</style>
         </div>
 
         {/* Top Badge */}

@@ -7,13 +7,37 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <Image
-              src="/logos/barbieratto-header.png"
-              alt="Barbieratto"
-              width={140}
-              height={50}
-              className="h-10 w-auto object-contain"
-            />
+            <div className="relative overflow-hidden rounded-lg">
+              <Image
+                src="/logos/barbieratto-header.png"
+                alt="Barbieratto"
+                width={140}
+                height={50}
+                className="h-10 w-auto object-contain relative z-10"
+              />
+              {/* Animated Gradient Overlay */}
+              <div
+                className="absolute inset-0 opacity-60 pointer-events-none"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.5), transparent)",
+                  animation: "gradient-shimmer 3s ease-in-out infinite",
+                }}
+              />
+            </div>
+
+            <style>{`
+              @keyframes gradient-shimmer {
+                0% {
+                  transform: translateX(-100%);
+                }
+                50% {
+                  transform: translateX(100%);
+                }
+                100% {
+                  transform: translateX(-100%);
+                }
+              }
+            `}</style>
           </div>
 
           {/* Links */}
