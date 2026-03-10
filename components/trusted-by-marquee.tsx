@@ -1,23 +1,24 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
 
 const companies = [
-  { name: "Irroba", color: "#FF6B35" },
-  { name: "Shoppub", color: "#2E86AB" },
-  { name: "Vtex", color: "#FA7921" },
-  { name: "Nuvemshop", color: "#0066CC" },
-  { name: "SoftUp ERP", color: "#8B4513" },
-  { name: "Bling/", color: "#FF5722" },
-  { name: "Olist", color: "#FF6B9D" },
-  { name: "Pagar.me", color: "#0099FF" },
-  { name: "Mercado Pago", color: "#FFC300" },
-  { name: "PayPal", color: "#003087" },
-  { name: "RD Station", color: "#E74C3C" },
-  { name: "Flowbiz", color: "#1E90FF" },
-  { name: "Revi", color: "#9B59B6" },
-  { name: "Martz", color: "#E67E22" },
-  { name: "CartStack", color: "#27AE60" },
+  { name: "Irroba", logo: "/logos/irroba.jpg" },
+  { name: "Shoppub", logo: "/logos/shoppub.jpg" },
+  { name: "VTEX", logo: "/logos/vtex.jpg" },
+  { name: "Nuvemshop", logo: "/logos/nuvemshop.jpg" },
+  { name: "SoftUp ERP", logo: "/logos/softup-erp.jpg" },
+  { name: "Bling7", logo: "/logos/bling.jpg" },
+  { name: "Olist", logo: "/logos/olist.jpg" },
+  { name: "Pagar.me", logo: "/logos/pagar-me.jpg" },
+  { name: "Mercado Pago", logo: "/logos/mercado-pago.jpg" },
+  { name: "PayPal", logo: "/logos/paypal.jpg" },
+  { name: "RD Station", logo: "/logos/rd-station.jpg" },
+  { name: "Flowbiz", logo: "/logos/flowbiz.jpg" },
+  { name: "Revi", logo: "/logos/revi.jpg" },
+  { name: "Martz", logo: "/logos/martz.jpg" },
+  { name: "CartStack", logo: "/logos/cartstack.jpg" },
 ]
 
 export function TrustedByMarquee() {
@@ -70,25 +71,15 @@ export function TrustedByMarquee() {
                 {companies.map((company) => (
                   <div
                     key={`${company.name}-${index}`}
-                    className="group relative flex items-center justify-center px-6 py-4 rounded-lg border border-border/20 bg-card/30 hover:bg-card/60 transition-all duration-300 cursor-pointer hover:border-primary/30 min-w-max overflow-hidden"
+                    className="group relative flex items-center justify-center px-6 py-4 rounded-lg border border-border/40 bg-white hover:bg-white transition-all duration-300 cursor-pointer hover:border-primary/60 hover:shadow-lg min-w-max overflow-hidden grayscale hover:grayscale-0"
                   >
-                    {/* Grayscale Default State */}
-                    <div
-                      className={`flex items-center justify-center font-semibold text-sm transition-all duration-300 group-hover:opacity-0 absolute ${
-                        company.name.length > 12 ? "text-xs px-2" : ""
-                      }`}
-                      style={{ color: "#999999", filter: "grayscale(100%)" }}
-                    >
-                      {company.name}
-                    </div>
-
-                    {/* Color Hover State */}
-                    <div
-                      className="flex items-center justify-center font-semibold text-sm opacity-0 group-hover:opacity-100 transition-all duration-300"
-                      style={{ color: company.color }}
-                    >
-                      {company.name}
-                    </div>
+                    <Image
+                      src={company.logo}
+                      alt={company.name}
+                      width={120}
+                      height={50}
+                      className="object-contain h-12 w-auto"
+                    />
                   </div>
                 ))}
               </div>

@@ -1,32 +1,33 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
 
 const certifications = [
   {
     id: "google-partner",
     name: "Google Partner",
-    color: "#4285F4",
+    logo: "/logos/google-partner.jpg",
   },
   {
     id: "meta-partner",
     name: "Meta Business Partner",
-    color: "#0A66C2",
+    logo: "/logos/meta-business-partner.jpg",
   },
   {
     id: "pinterest",
     name: "Pinterest ADS!",
-    color: "#E60023",
+    logo: "/logos/pinterest-ads.jpg",
   },
   {
     id: "linkedin",
     name: "LinkedIn ads",
-    color: "#0A66C2",
+    logo: "/logos/linkedin-ads.jpg",
   },
   {
     id: "tiktok",
     name: "TikTok Ads",
-    color: "#000000",
+    logo: "/logos/tiktok-ads.jpg",
   },
 ]
 
@@ -70,7 +71,7 @@ export function CertificationsRow() {
         </div>
 
         {/* Certifications Grid */}
-        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 max-w-4xl mx-auto">
+        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 max-w-5xl mx-auto">
           {certifications.map((cert, index) => (
             <div
               key={cert.id}
@@ -83,51 +84,22 @@ export function CertificationsRow() {
                 transitionDelay: isVisible ? `${index * 80}ms` : "0ms",
               }}
             >
-              {/* Metallic Badge Container */}
+              {/* Logo Container */}
               <div
-                className={`flex items-center justify-center w-32 h-32 rounded-xl border-2 transition-all duration-300 ${
+                className={`flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-xl border-2 transition-all duration-300 overflow-hidden ${
                   hoveredIndex === index
                     ? "border-primary/80 bg-white shadow-2xl"
-                    : "border-border bg-white shadow-lg"
+                    : "border-border bg-white shadow-lg grayscale"
                 }`}
-                style={{
-                  background: hoveredIndex === index
-                    ? `linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 100%)`
-                    : "white",
-                }}
               >
-                {/* Monochrome Logo Placeholder (in production, replace with actual logos) */}
-                <div
-                  className={`text-center px-4 transition-all duration-300 ${
-                    hoveredIndex === index ? "opacity-0" : "opacity-100"
+                <Image
+                  src={cert.logo}
+                  alt={cert.name}
+                  width={140}
+                  height={140}
+                  className={`w-full h-full object-contain p-4 transition-all duration-300 ${
+                    hoveredIndex === index ? "grayscale-0" : "grayscale"
                   }`}
-                >
-                  <div className="w-full h-12 bg-gradient-to-r from-gray-300 to-gray-400 rounded-lg flex items-center justify-center">
-                    <span className="text-gray-700 font-semibold text-xs text-center px-2">
-                      {cert.name}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Color Logo on Hover */}
-                <div
-                  className={`absolute inset-0 flex items-center justify-center rounded-xl transition-all duration-300 ${
-                    hoveredIndex === index ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: cert.color }}>
-                    <span className="text-white font-bold text-lg">★</span>
-                  </div>
-                </div>
-
-                {/* Shine Effect */}
-                <div
-                  className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 pointer-events-none ${
-                    hoveredIndex === index ? "bg-gradient-to-r from-transparent via-white to-transparent" : ""
-                  }`}
-                  style={{
-                    animation: hoveredIndex === index ? "metallic-shine 2s infinite" : "none",
-                  }}
                 />
               </div>
 
@@ -145,17 +117,6 @@ export function CertificationsRow() {
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes metallic-shine {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-      `}</style>
     </section>
   )
 }
