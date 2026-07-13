@@ -42,21 +42,27 @@ export function HeroSection() {
         <div className="flex justify-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary text-sm font-medium">
             <Zap className="h-4 w-4" />
-            <span>Metodologia comprovada por +500 empresas</span>
+            <span>Diagnóstico gratuito em menos de 1 minuto</span>
           </div>
         </div>
 
         {/* Main Headline */}
         <div className="text-center max-w-4xl mx-auto space-y-6">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight text-balance">
-            Escale seu negócio e{" "}
-            <span className="text-primary">maximize seu ROI</span>{" "}
-            com marketing de performance
+            Descubra quanto dinheiro você{" "}
+            <span className="text-primary">perdeu nos últimos 12 meses</span>{" "}
+            por vender em marketplaces
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Descubra quanto sua empresa pode faturar utilizando estratégias
-            inteligentes de aquisição. Calcule seu potencial de retorno agora.
+            Informe seu faturamento nos marketplaces e descubra quanto da sua
+            margem pode estar sendo consumida pelas taxas e pelos custos do
+            canal.
+          </p>
+
+          <p className="text-sm text-muted-foreground/80 max-w-xl mx-auto">
+            A análise utiliza uma estrutura média de custos para comparar
+            marketplaces e e-commerce próprio.
           </p>
         </div>
 
@@ -64,18 +70,18 @@ export function HeroSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 max-w-3xl mx-auto">
           <StatCard
             icon={<TrendingUp className="h-5 w-5" />}
-            value="3.5x"
-            label="ROI médio dos clientes"
+            value="15+"
+            label="Anos de experiência"
           />
           <StatCard
             icon={<Target className="h-5 w-5" />}
-            value="R$ 50M+"
-            label="Gerenciados em mídia"
+            value="R$ 500M+"
+            label="Gerenciados em faturamento"
           />
           <StatCard
             icon={<Zap className="h-5 w-5" />}
-            value="+180%"
-            label="Crescimento médio"
+            value="12%"
+            label="Margem média recuperável"
           />
         </div>
 
@@ -88,7 +94,7 @@ export function HeroSection() {
             asChild
           >
             <a href="#calculator" className="flex flex-col items-center gap-2">
-              <span className="text-sm font-medium">Calcular meu retorno</span>
+              <span className="text-sm font-medium">Calcular meu potencial</span>
               <ArrowDown className="h-5 w-5 animate-bounce" />
             </a>
           </Button>

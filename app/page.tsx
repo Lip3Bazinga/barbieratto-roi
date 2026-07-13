@@ -1,5 +1,5 @@
 import { HeroSection } from "@/components/hero-section"
-import { RoiCalculator } from "@/components/roi-calculator"
+import { MarginCalculator } from "@/components/margin-calculator"
 import { TrustBadges } from "@/components/trust-badges"
 import { TrustedByMarquee } from "@/components/trusted-by-marquee"
 import { OurImpact } from "@/components/our-impact"
@@ -18,7 +18,7 @@ export default function Home() {
       <section id="calculator" className="relative py-16 md:py-24">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
         <div className="container relative mx-auto px-4 flex flex-col items-center">
-          <RoiCalculator />
+          <MarginCalculator />
         </div>
       </section>
 
