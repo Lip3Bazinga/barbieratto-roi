@@ -90,7 +90,7 @@ export function HeroSection() {
           <Button
             variant="ghost"
             size="lg"
-            className="text-muted-foreground hover:text-primary group"
+            className="text-muted-foreground hover:text-primary hover:bg-transparent group"
             asChild
           >
             <a href="#calculator" className="flex flex-col items-center gap-2">
