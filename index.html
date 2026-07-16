@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Margem | Barbieratto</title>
+    <meta
+      name="description"
+      content="Informe seu faturamento nos marketplaces e descubra quanto da sua margem pode estar sendo consumida pelas taxas e pelos custos do canal."
+    />
+    <link rel="icon" href="public/icon.svg" type="image/svg+xml" />
+    <link rel="icon" href="public/icon-light-32x32.png" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="public/icon-dark-32x32.png" media="(prefers-color-scheme: dark)" />
+    <link rel="apple-touch-icon" href="public/apple-icon.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div class="hero__inner">
+          <!-- Topo: badge à esquerda; as logos migram pra cá ao abrir a calculadora. -->
+          <div class="hero__topbar">
+            <p class="badge">
+              <span>Diagnóstico gratuito em menos de 1 minuto</span>
+            </p>
+
+            <div class="hero__initiative hero__initiative--top" id="logos-top" hidden>
+              <div class="hero__initiative-logos">
+                <div class="hero__initiative-plate">
+                  <img src="public/logos/barbieratto-header.png" alt="Barbieratto" data-logo="barbieratto" width="534" height="143" />
+                </div>
+                <div class="hero__initiative-plate">
+                  <img src="public/logos/ecommerce-12x-tight.png" alt="E-commerce 12X" data-logo="ecommerce" width="2622" height="640" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero__grid">
+            <!-- Conteúdo de marketing -->
+            <div class="hero__content">
+
+              <h1 class="hero__title">
+                Descubra quanto dinheiro você
+                <em>perdeu nos últimos 12 meses</em>
+                por vender em marketplaces
+              </h1>
+
+              <p class="hero__subtitle">
+                Informe seu faturamento nos marketplaces e descubra quanto da sua margem pode estar
+                sendo consumida pelas taxas e pelos custos do canal.
+              </p>
+
+              <p class="hero__note">
+                A análise utiliza uma estrutura média de custos para comparar marketplaces e
+                e-commerce próprio.
+              </p>
+
+              <ul class="hero__stats">
+                <li class="hero-stat">
+                  <span class="hero-stat__value">15+</span>
+                  <span class="hero-stat__label">Anos de experiência</span>
+                </li>
+                <li class="hero-stat">
+                  <span class="hero-stat__value">R$ 500M+</span>
+                  <span class="hero-stat__label">Gerenciados em faturamento</span>
+                </li>
+                <li class="hero-stat">
+                  <span class="hero-stat__value">12%</span>
+                  <span class="hero-stat__label">Margem média recuperável</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Calculadora -->
+            <div class="calculator-slot" id="calculator">
+              <div class="start-block" id="start-block">
+                <div class="hero__initiative">
+                  <span class="hero__initiative-label">Uma iniciativa</span>
+                  <div class="hero__initiative-logos">
+                    <div class="hero__initiative-plate">
+                      <img src="public/logos/barbieratto-header.png" alt="Barbieratto" data-logo="barbieratto" width="534" height="143" />
+                    </div>
+                    <div class="hero__initiative-plate">
+                      <img src="public/logos/ecommerce-12x-tight.png" alt="E-commerce 12X" data-logo="ecommerce" width="2622" height="640" />
+                    </div>
+                  </div>
+                </div>
+
+                <button class="btn btn--success btn--reveal" id="start" type="button" aria-controls="calc" aria-expanded="false">
+                  Começar a análise
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="calc" id="calc" hidden>
+                <!-- Progresso -->
+                <div class="calc__progress" id="progress" hidden>
+                  <p class="calc__progress-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect width="16" height="20" x="4" y="2" rx="2" /><line x1="8" x2="16" y1="6" y2="6" /><line x1="16" x2="16" y1="14" y2="18" /><path d="M16 10h.01" /><path d="M12 10h.01" /><path d="M8 10h.01" /><path d="M12 14h.01" /><path d="M8 14h.01" /><path d="M12 18h.01" /><path d="M8 18h.01" />
+                    </svg>
+                    Calculadora de margem
+                  </p>
+                  <div class="calc__progress-bars" id="progress-bars"></div>
+                </div>
+
+                <div class="calc__body">
+                  <noscript>
+                    <p class="calc__hint">
+                      A calculadora precisa de JavaScript para funcionar. Ative o JavaScript no seu
+                      navegador para fazer o diagnóstico.
+                    </p>
+                  </noscript>
+
+                  <!-- PASSO 1: Marketplace -->
+                  <section class="calc__step" data-step="marketplace" hidden>
+                    <h2 class="calc__heading">
+                      Em qual marketplace sua empresa concentra a maior parte das vendas?
+                    </h2>
+                    <div class="option-grid" id="marketplace-options"></div>
+                    <div class="field" id="marketplace-other-field" hidden>
+                      <label class="field__label" for="marketplace-other">Qual marketplace?</label>
+                      <input class="input" type="text" id="marketplace-other" placeholder="Digite o nome do marketplace" />
+                    </div>
+                    <button class="btn btn--primary btn--block" id="marketplace-next" disabled>
+                      Continuar
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                      </svg>
+                    </button>
+                  </section>
+
+                  <!-- PASSO 2: Faturamento -->
+                  <section class="calc__step" data-step="revenue" hidden>
+                    <div>
+                      <h2 class="calc__heading">
+                        Quanto sua empresa faturou nos marketplaces nos últimos 12 meses?
+                      </h2>
+                      <p class="calc__hint">
+                        Considere o valor total das vendas antes do desconto de taxas, comissões,
+                        anúncios e frete.
+                      </p>
+                    </div>
+                    <div class="field">
+                      <label class="field__label" for="revenue" hidden>Faturamento</label>
+                      <input
+                        class="input input--currency"
+                        type="text"
+                        id="revenue"
+                        inputmode="numeric"
+                        placeholder="R$ 0,00"
+                        aria-describedby="revenue-error"
+                      />
+                      <p class="field__error" id="revenue-error" role="alert" hidden></p>
+                    </div>
+                    <div class="calc__actions">
+                      <button class="btn btn--outline btn--icon" data-back aria-label="Voltar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="m12 19-7-7 7-7" /><path d="M19 12H5" />
+                        </svg>
+                      </button>
+                      <button class="btn btn--primary btn--block" id="revenue-next">
+                        Continuar
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </section>
+
+                  <!-- PASSO 3: Nicho -->
+                  <section class="calc__step" data-step="niche" hidden>
+                    <h2 class="calc__heading">
+                      Qual é a principal categoria dos produtos que você vende?
+                    </h2>
+                    <div class="option-grid option-grid--niche" id="niche-options"></div>
+                    <div class="field" id="niche-other-field" hidden>
+                      <label class="field__label" for="niche-other">Qual categoria?</label>
+                      <input class="input" type="text" id="niche-other" placeholder="Digite a categoria dos seus produtos" />
+                    </div>
+                    <div class="calc__actions">
+                      <button class="btn btn--outline btn--icon" data-back aria-label="Voltar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="m12 19-7-7 7-7" /><path d="M19 12H5" />
+                        </svg>
+                      </button>
+                      <button class="btn btn--primary btn--block" id="niche-next" disabled>
+                        Analisar meu potencial
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </section>
+
+                  <!-- PASSO 4: Processamento -->
+                  <section class="calc__processing" data-step="processing" hidden aria-live="polite">
+                    <svg class="spinner" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                    </svg>
+                    <p class="calc__processing-message" id="processing-message"></p>
+                    <div class="calc__dots" id="processing-dots"></div>
+                  </section>
+
+                  <!-- PASSO 5: Prévia -->
+                  <section class="calc__step calc__step--center" data-step="preview" hidden>
+                    <p class="pill">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" />
+                      </svg>
+                      Seu diagnóstico está pronto
+                    </p>
+                    <p class="calc__lede">
+                      Identificamos uma diferença relevante entre o custo médio do marketplace e o
+                      custo estimado de uma operação própria.
+                    </p>
+                    <div>
+                      <p class="calc__preview-label">Sua empresa poderia ter preservado mais de:</p>
+                      <p class="calc__preview-value">R$&nbsp;1<span class="blurred">••.•••</span>,00</p>
+                    </div>
+                    <div class="calc__locked">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                      <p>
+                        Preencha seus dados para acessar o valor completo e receber seu diagnóstico
+                        personalizado.
+                      </p>
+                    </div>
+                    <button class="btn btn--primary btn--block" id="reveal">
+                      Revelar valor completo
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                      </svg>
+                    </button>
+                  </section>
+
+                  <!-- PASSO 6: Captura -->
+                  <form class="calc__step" data-step="capture" id="lead-form" hidden novalidate>
+                    <div class="calc__step--center">
+                      <h2 class="calc__heading">Falta pouco para o seu diagnóstico</h2>
+                      <p class="calc__hint">Preencha seus dados para acessar o valor completo.</p>
+                    </div>
+                    <div class="field">
+                      <label class="field__label" for="name">Nome</label>
+                      <input class="input" type="text" id="name" placeholder="Seu nome completo" required />
+                    </div>
+                    <div class="field">
+                      <label class="field__label" for="email">E-mail</label>
+                      <input class="input" type="email" id="email" placeholder="seu@email.com" required />
+                    </div>
+                    <div class="field">
+                      <label class="field__label" for="whatsapp">WhatsApp</label>
+                      <input class="input" type="tel" id="whatsapp" placeholder="(00) 00000-0000" required />
+                    </div>
+                    <button class="btn btn--primary btn--block" type="submit" id="lead-submit" disabled>
+                      Ver meu diagnóstico completo
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                      </svg>
+                    </button>
+                  </form>
+
+                  <!-- PASSO 7: Diagnóstico -->
+                  <section class="calc__step" data-step="diagnosis" hidden>
+                    <div class="calc__step--center">
+                      <p class="pill">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" />
+                        </svg>
+                        Seu diagnóstico está pronto
+                      </p>
+                      <p class="calc__lede" style="margin-top: 0.5rem">
+                        <strong id="lead-name">Olá</strong>, com base no faturamento informado dos
+                        últimos 12 meses, sua empresa poderia ter gerado aproximadamente:
+                      </p>
+                    </div>
+
+                    <div class="diagnosis-row">
+                      <div class="result-card">
+                        <p class="result-card__label">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M16 17h6v-6" /><path d="m22 17-8.5-8.5-5 5L2 7" />
+                          </svg>
+                          A mais no último ano
+                        </p>
+                        <p class="result-card__value" id="annual-value"></p>
+                      </div>
+
+                      <ul class="mini-stats">
+                        <li class="mini-stat">
+                          <span class="mini-stat__value">15+</span>
+                          <span class="mini-stat__label">Anos de experiência</span>
+                        </li>
+                        <li class="mini-stat">
+                          <span class="mini-stat__value">R$ 500M+</span>
+                          <span class="mini-stat__label">Gerenciados</span>
+                        </li>
+                        <li class="mini-stat">
+                          <span class="mini-stat__value">12%</span>
+                          <span class="mini-stat__label">Margem recuperável</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="result-card result-card--muted">
+                      <p>Isso representa cerca de:</p>
+                      <p class="result-card__value" id="monthly-value"></p>
+                      <p>a mais por mês dentro da operação</p>
+                    </div>
+
+                    <p class="calc__disclaimer">
+                      Com um canal próprio, esse valor poderia ser utilizado para aumentar o lucro,
+                      reinvestir em aquisição de clientes, ampliar o estoque ou acelerar o
+                      crescimento da empresa.
+                    </p>
+
+                    <div class="specialist">
+                      <div class="specialist__photo">
+                        <img src="public/victor-specialist.png" alt="Victor — Especialista em e-commerce" width="96" height="96" />
+                      </div>
+                      <p>
+                        Há mais de 15 anos desenvolvemos estratégias para e-commerces de diferentes
+                        nichos, com operações que juntas já ultrapassaram
+                        <strong>R$ 500 milhões</strong> em faturamento — ajudando empresas a crescer
+                        sem depender exclusivamente de marketplaces e a aumentar suas margens.
+                      </p>
+                    </div>
+
+                    <div class="calc__cta">
+                      <p class="calc__disclaimer">
+                        Para entender como essa estratégia pode ser aplicada ao seu negócio, agende
+                        uma reunião sem compromisso com um dos nossos especialistas.
+                      </p>
+                      <button class="btn btn--primary btn--block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /><path d="m9 16 2 2 4-4" />
+                        </svg>
+                        Quero agendar uma reunião
+                      </button>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
