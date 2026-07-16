@@ -74,6 +74,36 @@
     return parseInt(digits, 10) / 100;
   }
 
+  /** Máscara progressiva de telefone BR: (11) 91234-5678. */
+  function formatPhone(value) {
+    var d = value.replace(/\D/g, "").slice(0, 11);
+    if (!d) return "";
+    if (d.length <= 2) return "(" + d;
+    if (d.length <= 6) return "(" + d.slice(0, 2) + ") " + d.slice(2);
+    if (d.length <= 10) return "(" + d.slice(0, 2) + ") " + d.slice(2, 6) + "-" + d.slice(6);
+    return "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7);
+  }
+
+  var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /** Conta de 0 até o valor em BRL; vai direto ao fim se o usuário pediu menos movimento. */
+  function countUp(el, target) {
+    if (reducedMotion.matches) {
+      el.textContent = brl.format(target);
+      return;
+    }
+    var DURATION = 1100;
+    var start = null;
+    var tick = function (now) {
+      if (start === null) start = now;
+      var progress = Math.min((now - start) / DURATION, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = brl.format(target * eased);
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
   // -- Elementos ------------------------------------------------------------
 
   var $ = function (id) {
@@ -153,6 +183,11 @@
 
       if (next === "processing") runProcessing();
       if (next === "diagnosis") renderDiagnosis();
+
+      // O botão clicado acabou de sumir; devolve o foco ao passo que entrou.
+      // Passos com campo visível focam o campo, os demais focam a seção.
+      var field = incoming.querySelector(".field:not([hidden]) .input");
+      (field || incoming).focus({ preventScroll: true });
     };
 
     if (first) {
@@ -205,6 +240,7 @@
         otherField.hidden = item.id !== "outro";
         if (item.id === "outro") {
           otherField.classList.add("animate-fade");
+          $(key + "-other").focus({ preventScroll: true });
         } else {
           state[key + "Other"] = "";
           $(key + "-other").value = "";
@@ -295,13 +331,27 @@
     var annual = revenue * DIFFERENCE;
 
     $("lead-name").textContent = state.name.split(" ")[0] || "Olá";
-    $("annual-value").textContent = brl.format(annual);
-    $("monthly-value").textContent = brl.format(annual / 12);
+    countUp($("annual-value"), annual);
+    countUp($("monthly-value"), annual / 12);
+  }
+
+  /** Mostra/limpa o erro de um campo do formulário de captura. */
+  function fieldError(id, message) {
+    var el = $(id + "-error");
+    el.textContent = message;
+    el.hidden = !message;
+    $(id).classList.toggle("has-error", Boolean(message));
+    if (message) el.classList.add("animate-fade");
   }
 
   // -- Ligações -------------------------------------------------------------
 
   function init() {
+    // Alvo de foco programático na troca de passos.
+    steps.forEach(function (el) {
+      el.setAttribute("tabindex", "-1");
+    });
+
     STEP_ORDER.forEach(function () {
       var bar = document.createElement("div");
       bar.className = "calc__progress-bar";
@@ -334,6 +384,24 @@
 
       revenueError.hidden = true;
       revenueInput.classList.remove("has-error");
+    });
+
+    // Enter avança, como o usuário espera num fluxo de perguntas.
+    revenueInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        $("revenue-next").click();
+      }
+    });
+
+    ["marketplace", "niche"].forEach(function (key) {
+      $(key + "-other").addEventListener("keydown", function (e) {
+        var next = $(key + "-next");
+        if (e.key === "Enter" && !next.disabled) {
+          e.preventDefault();
+          next.click();
+        }
+      });
     });
 
     startBtn.addEventListener("click", function () {
@@ -380,12 +448,39 @@
       });
     });
 
+    // A máscara roda antes do gate: os listeners disparam na ordem de registro.
+    $("whatsapp").addEventListener("input", function (e) {
+      e.target.value = formatPhone(e.target.value);
+    });
+
+    ["email", "whatsapp"].forEach(function (id) {
+      $(id).addEventListener("input", function () {
+        fieldError(id, "");
+      });
+    });
+
     ["name", "email", "whatsapp"].forEach(function (id) {
       $(id).addEventListener("input", syncLeadGate);
     });
 
     leadForm.addEventListener("submit", function (e) {
       e.preventDefault();
+
+      var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($("email").value.trim());
+      var phoneOk = $("whatsapp").value.replace(/\D/g, "").length >= 10;
+
+      fieldError("email", emailOk ? "" : "Confira o e-mail — parece incompleto.");
+      fieldError(
+        "whatsapp",
+        phoneOk ? "" : "Informe um WhatsApp com DDD, ex.: (11) 91234-5678."
+      );
+
+      var firstInvalid = !emailOk ? $("email") : !phoneOk ? $("whatsapp") : null;
+      if (firstInvalid) {
+        firstInvalid.focus();
+        return;
+      }
+
       state.name = $("name").value;
       setStep("diagnosis");
     });

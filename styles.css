@@ -113,6 +113,19 @@ h2 {
   pointer-events: none;
 }
 
+/* Contraponto do gradiente do topo: um sopro de verde atrás do CTA. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at bottom right,
+    color-mix(in oklch, var(--success) 7%, transparent),
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
 .hero__inner {
   position: relative;
   width: 100%;
@@ -151,13 +164,16 @@ h2 {
    Logo
    -------------------------------------------------------------------------- */
 
-@keyframes logo-gradient-sweep {
+/* Sheen por transform (compositor): animar background-position repinta a
+   placa a cada frame; deslocar um brilho com translateX não. */
+@keyframes logo-sheen {
   0%,
-  100% {
-    background-position: 0% 50%;
+  60% {
+    transform: translateX(-100%);
   }
-  50% {
-    background-position: 100% 50%;
+  90%,
+  100% {
+    transform: translateX(100%);
   }
 }
 
@@ -182,13 +198,20 @@ h2 {
   font-size: clamp(1.75rem, 8vw, 2.25rem);
   font-weight: 700;
   line-height: 1.15;
+  letter-spacing: -0.02em;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
 
+/* Marcador verde sob a ênfase: liga o título ao CTA (mesma cor de ação). */
 .hero__title em {
   color: var(--primary);
   font-style: normal;
+  background: linear-gradient(
+    to top,
+    color-mix(in oklch, var(--success) 30%, transparent) 0.3em,
+    transparent 0.3em
+  );
 }
 
 .hero__subtitle {
@@ -325,10 +348,22 @@ h2 {
   width: 250px;
   max-width: 100%;
   padding: 0.75rem 1.5rem;
+  overflow: hidden;
   border-radius: var(--radius-lg);
-  background: linear-gradient(90deg, #000, #2a2a2a, #111, #3a3a3a, #000);
-  background-size: 300% 100%;
-  animation: logo-gradient-sweep 4s ease-in-out infinite;
+  background: linear-gradient(90deg, #000, #222 45%, #0a0a0a);
+}
+
+.hero__initiative-plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgb(255 255 255 / 0.09) 50%,
+    transparent 65%
+  );
+  animation: logo-sheen 4s ease-in-out infinite;
 }
 
 .hero__initiative-plate img {
@@ -393,7 +428,7 @@ h2 {
 }
 
 .btn--primary:hover {
-  background: color-mix(in oklch, var(--primary) 90%, transparent);
+  background: color-mix(in oklch, var(--primary) 86%, white);
   box-shadow: var(--shadow-xl);
 }
 
@@ -417,7 +452,7 @@ h2 {
 }
 
 .btn--success:hover {
-  background: color-mix(in oklch, var(--success) 90%, transparent);
+  background: color-mix(in oklch, var(--success) 88%, white);
 }
 
 /* A seta desliza no hover, como o group-hover:translate-x-1 do original. */
@@ -459,9 +494,12 @@ h2 {
   align-items: stretch;
 }
 
+/* margin auto: entre ~700px e 1024px o slot é mais largo que o card
+   (max-width) e o stretch do slot o deixaria colado à esquerda. */
 .calc {
   width: 100%;
   max-width: 42rem;
+  margin-inline: auto;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
@@ -660,6 +698,15 @@ h2 {
   border-color: var(--destructive);
 }
 
+.input.has-error:focus-visible {
+  box-shadow: 0 0 0 2px var(--destructive);
+}
+
+/* Passos recebem foco programático na troca (tabindex=-1); sem anel visual. */
+[data-step]:focus {
+  outline: none;
+}
+
 .field__error {
   color: var(--destructive);
   font-size: 0.875rem;
@@ -773,6 +820,7 @@ h2 {
   color: var(--primary);
   font-size: 2.25rem;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   user-select: none;
 }
 
@@ -823,11 +871,13 @@ h2 {
   text-transform: uppercase;
 }
 
-/* O número é a revelação: entra com escala, um tempo depois do card. */
+/* O número é a revelação: entra com escala, um tempo depois do card.
+   tabular-nums evita que os dígitos dancem durante a contagem. */
 .result-card__value {
   color: var(--primary);
   font-size: clamp(1.5rem, 7vw, 2.25rem);
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   overflow-wrap: break-word;
   animation: value-reveal 0.6s var(--ease-spring) 0.35s backwards;
 }
@@ -908,16 +958,10 @@ h2 {
 }
 
 /* --------------------------------------------------------------------------
-   Stats do diagnóstico
+   Cascata do diagnóstico
    -------------------------------------------------------------------------- */
 
-/* Empilha no mobile; vira valor + stats lado a lado a partir de 640px. */
-.diagnosis-row {
-  display: grid;
-  gap: 0.75rem;
-}
-
-/* Cascata do diagnóstico: pílula → valor → stats → mensal → especialista → CTA. */
+/* Pílula → valor → mensal → especialista → CTA. */
 .animate-in-zoom > * {
   animation: rise-in 0.5s var(--ease-out) backwards;
 }
@@ -928,56 +972,6 @@ h2 {
 .animate-in-zoom > *:nth-child(4) { animation-delay: 0.4s; }
 .animate-in-zoom > *:nth-child(5) { animation-delay: 0.5s; }
 .animate-in-zoom > *:nth-child(6) { animation-delay: 0.6s; }
-
-.mini-stat {
-  animation: mini-stat-in 0.4s var(--ease-out) backwards;
-}
-
-.mini-stat:nth-child(1) { animation-delay: 0.45s; }
-.mini-stat:nth-child(2) { animation-delay: 0.55s; }
-.mini-stat:nth-child(3) { animation-delay: 0.65s; }
-
-@keyframes mini-stat-in {
-  from {
-    opacity: 0;
-    transform: translateX(-0.5rem);
-  }
-}
-
-/* Centraliza o valor verticalmente quando a coluna de stats o estica. */
-.diagnosis-row .result-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: 0;
-}
-
-.mini-stats {
-  display: grid;
-  gap: 0.75rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.mini-stat {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0.5rem 0.75rem;
-  border-left: 2px solid var(--primary-20);
-}
-
-.mini-stat__value {
-  font-size: 1.125rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.mini-stat__label {
-  color: var(--muted-foreground);
-  font-size: 0.75rem;
-}
 
 /* --------------------------------------------------------------------------
    Animações de entrada
@@ -1049,6 +1043,32 @@ h2 {
   animation: fade-in 0.3s var(--ease-out);
 }
 
+/* Cascata de chegada da página: o hero se apresenta de cima pra baixo.
+   (.start-block.is-leaving vence esta animação por especificidade.) */
+.badge {
+  animation: rise-in 0.5s var(--ease-out) 0.05s backwards;
+}
+
+.hero__title {
+  animation: rise-in 0.55s var(--ease-out) 0.12s backwards;
+}
+
+.hero__subtitle {
+  animation: rise-in 0.55s var(--ease-out) 0.2s backwards;
+}
+
+.hero__note {
+  animation: rise-in 0.55s var(--ease-out) 0.28s backwards;
+}
+
+.hero__stats {
+  animation: rise-in 0.55s var(--ease-out) 0.36s backwards;
+}
+
+.start-block {
+  animation: rise-in 0.55s var(--ease-out) 0.45s backwards;
+}
+
 /* Cascata das opções de marketplace/nicho ao entrar no passo. */
 .animate-in-forward .option,
 .animate-in-back .option {
@@ -1090,6 +1110,12 @@ h2 {
   align-self: center;
 }
 
+/* display:flex venceria o [hidden] do navegador e o bloco invisível
+   continuaria ocupando ~300px entre o texto e o card no mobile. */
+.start-block[hidden] {
+  display: none;
+}
+
 .start-block.is-leaving {
   animation: reveal-btn-out 0.32s var(--ease-exit) forwards;
   pointer-events: none;
@@ -1108,26 +1134,37 @@ h2 {
 }
 
 .btn--reveal {
+  position: relative;
   height: 4.5rem;
   padding: 0 2.75rem;
   border-radius: var(--radius-lg);
   font-size: 1.25rem;
-  animation: cta-pulse 2.8s ease-in-out 1.2s infinite;
 }
 
 .btn--reveal:hover {
-  animation-play-state: paused;
   transform: translateY(-2px);
 }
 
-/* Respiro sutil pra atrair o olhar ao CTA principal. */
+/* Respiro sutil pra atrair o olhar ao CTA. O brilho expandido vive num
+   pseudo-elemento e pulsa via opacity (compositor), não via box-shadow. */
+.btn--reveal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 10px 30px 4px color-mix(in oklch, var(--success) 35%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  animation: cta-pulse 2.8s ease-in-out 1.2s infinite;
+}
+
+.btn--reveal:hover::after {
+  animation-play-state: paused;
+}
+
 @keyframes cta-pulse {
-  0%,
-  100% {
-    box-shadow: 0 10px 15px -3px color-mix(in oklch, var(--success) 20%, transparent);
-  }
   50% {
-    box-shadow: 0 10px 30px 4px color-mix(in oklch, var(--success) 35%, transparent);
+    opacity: 1;
   }
 }
 
@@ -1179,8 +1216,8 @@ h2 {
 }
 
 /* Animações em loop não precisam rodar com a aba em segundo plano. */
-.is-hidden-tab .btn--reveal,
-.is-hidden-tab .hero__initiative-plate {
+.is-hidden-tab .btn--reveal::after,
+.is-hidden-tab .hero__initiative-plate::before {
   animation-play-state: paused;
 }
 
@@ -1211,13 +1248,6 @@ h2 {
 
   .specialist p {
     text-align: left;
-  }
-
-  /* Valor à esquerda, stats simplificados à direita. */
-  .diagnosis-row {
-    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
-    gap: 1rem;
-    align-items: stretch;
   }
 }
 
