@@ -272,28 +272,17 @@ h2 {
   gap: 0.75rem;
 }
 
-/* Versão do topo: sem rótulo, placas menores pra casar com a altura do badge. */
-.hero__initiative--top[hidden] {
-  display: none;
-}
-
-/* As logos "sobem" do bloco que saiu: entram de baixo, com sobra no fim.
-   O atraso deixa o bloco antigo sair antes. */
-.hero__initiative--top {
-  animation: logos-to-top 0.65s var(--ease-spring) 0.1s backwards;
-}
-
-/* Cada placa chega logo após a outra. */
+/* Versão do topo: entra junto com a cascata do hero, uma placa após a outra. */
 .hero__initiative--top .hero__initiative-plate {
   animation: plate-in 0.5s var(--ease-spring) backwards;
 }
 
 .hero__initiative--top .hero__initiative-plate:nth-child(1) {
-  animation-delay: 0.18s;
+  animation-delay: 0.12s;
 }
 
 .hero__initiative--top .hero__initiative-plate:nth-child(2) {
-  animation-delay: 0.28s;
+  animation-delay: 0.22s;
 }
 
 @keyframes plate-in {
@@ -303,11 +292,13 @@ h2 {
   }
 }
 
-/* Placas de 250px com a logo preenchendo a largura. object-fit:contain
-   (não cover): cover força a proporção da placa e deceparia as marcas.
-   Altura fixa mantém as duas placas iguais apesar das artes diferentes. */
+/* Placas compactas: duas cabem lado a lado até em telas de ~360px.
+   object-fit:contain (não cover): cover força a proporção da placa e
+   deceparia as marcas. Altura fixa iguala as placas apesar das artes
+   de proporções diferentes. */
 .hero__initiative--top .hero__initiative-plate {
-  height: 3.5rem;
+  width: 10.5rem;
+  height: 3.25rem;
   padding: 0.5rem 0.875rem;
 }
 
@@ -315,20 +306,6 @@ h2 {
   width: 100%;
   height: 100%;
   object-fit: contain;
-}
-
-@keyframes logos-to-top {
-  from {
-    opacity: 0;
-    transform: translateY(2rem);
-  }
-}
-
-.hero__initiative-label {
-  color: color-mix(in oklch, var(--muted-foreground) 70%, transparent);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
 }
 
 /* Duas placas de 250px não cabem lado a lado no mobile: empilham. */

@@ -114,7 +114,6 @@
   var calc = $("calc");
   var startBtn = $("start");
   var startBlock = $("start-block");
-  var logosTop = $("logos-top");
   var progress = $("progress");
   var progressBars = $("progress-bars");
   var revenueInput = $("revenue");
@@ -410,7 +409,6 @@
 
       var t = setTimeout(function () {
         startBlock.hidden = true;
-        logosTop.hidden = false;
         calc.hidden = false;
         calc.parentElement.classList.add("is-revealed");
         calc.classList.add("is-entering");
