@@ -404,11 +404,15 @@
     });
 
     startBtn.addEventListener("click", function () {
+      var heroContent = document.querySelector(".hero__content");
+
       startBlock.classList.add("is-leaving");
+      heroContent.classList.add("is-leaving");
       startBtn.setAttribute("aria-expanded", "true");
 
       var t = setTimeout(function () {
         startBlock.hidden = true;
+        heroContent.hidden = true;
         calc.hidden = false;
         calc.parentElement.classList.add("is-revealed");
         calc.classList.add("is-entering");
