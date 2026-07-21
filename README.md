@@ -40,9 +40,25 @@ A diferença de 12 pontos percentuais é aplicada sobre o faturamento informado 
 
 As premissas ficam no topo de `script.js` (`MARKETPLACE_COST`, `OWN_ECOMMERCE_COST`).
 
+## Envio do lead
+
+No submit do formulário, os dados vão por `POST` (JSON) para o webhook definido em
+`WEBHOOK_URL`, no topo de `script.js`.
+
+O envio não bloqueia a interface: o diagnóstico aparece na hora e uma falha de rede
+não prende a pessoa numa tela de erro. O `keepalive` mantém a entrega mesmo se a aba
+for fechada logo após o envio.
+
+O payload leva os dados de captação (`nome`, `email`, `whatsapp` e `whatsapp_e164`),
+todas as respostas da calculadora (`marketplace`, `nicho`, `faturamento_12m` — com os
+`*_id` e o texto livre quando a escolha é "Outro"), o resultado apresentado
+(`valor_anual`, `valor_mensal`, `margem_recuperavel_percentual`, em número e
+formatado) e o contexto (`origem`, `pagina`, `referrer`, `enviado_em` e `tracking`
+com UTMs, `gclid` e `fbclid` quando presentes na URL).
+
 ## Notas
 
-- O formulário de lead não envia dados a lugar nenhum: o submit apenas avança para
-  o diagnóstico. Integrar a um CRM exige implementar o envio em `script.js`.
 - A calculadora depende de JavaScript; sem ele, um aviso aparece no lugar.
+- O botão "Quero agendar uma reunião" ainda não tem ação: falta definir o destino
+  (link do Calendly, WhatsApp etc.).
 - A versão anterior em Next.js está no histórico, no commit `4d32cef`.

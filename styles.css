@@ -2,19 +2,26 @@
    Barbieratto — Calculadora de margem
    ========================================================================== */
 
+/* Tema escuro: o fundo claro destoava do restante do visual da marca.
+   Os papéis dos tokens seguem os mesmos — só a escala de luminosidade
+   inverteu, então os componentes continuam lendo as mesmas variáveis. */
 :root {
-  --background: oklch(0.98 0 0);
-  --foreground: oklch(0.2 0 0);
-  --card: oklch(0.96 0 0);
-  --primary: oklch(0.15 0 0);
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.3 0 0);
-  --muted-foreground: oklch(0.5 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --success: oklch(0.62 0.17 145);
-  --success-foreground: oklch(0.99 0 0);
-  --border: oklch(0.92 0 0);
+  --background: oklch(0.17 0.005 260);
+  --foreground: oklch(0.97 0 0);
+  --card: oklch(0.22 0.006 260);
+  --primary: oklch(0.97 0 0);
+  --primary-foreground: oklch(0.17 0.005 260);
+  --secondary: oklch(0.8 0 0);
+  --muted-foreground: oklch(0.68 0 0);
+  --destructive: oklch(0.68 0.19 25);
+  --success: oklch(0.72 0.17 145);
+  --success-foreground: oklch(0.16 0.02 145);
+  --border: oklch(0.3 0.006 260);
   --radius: 0.75rem;
+
+  /* Superfícies elevadas sobre o fundo (o card e os campos dentro dele). */
+  --surface: oklch(0.21 0.006 260);
+  --surface-raised: oklch(0.25 0.006 260);
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -37,11 +44,13 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
 
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  /* Sombras mais densas que no tema claro: sobre fundo escuro, alphas de
+     0.05–0.1 desaparecem e os cartões perdem a separação do fundo. */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.55), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.5);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.75);
 }
 
 *,
@@ -110,7 +119,7 @@ h2 {
     transparent 1.5px
   );
   background-size: 28px 28px;
-  opacity: 0.14;
+  opacity: 0.1;
   -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, transparent 25%, #000 80%);
   mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, transparent 25%, #000 80%);
   pointer-events: none;
@@ -389,7 +398,11 @@ h2 {
   padding: 0.75rem 1.5rem;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  background: linear-gradient(90deg, #000, #222 45%, #0a0a0a);
+  /* As artes das marcas são feitas para placa escura; sobre o fundo escuro
+     a placa some, então um rim claro devolve o contorno dela. */
+  background: linear-gradient(90deg, #0d0d0f, #26262b 45%, #131316);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .hero__initiative-plate::before {
@@ -462,12 +475,14 @@ h2 {
 
 .btn--primary {
   background: var(--primary);
-  color: #fff;
+  color: var(--primary-foreground);
   box-shadow: var(--shadow-lg);
 }
 
+/* No tema escuro o primary já é quase branco: clarear no hover não muda
+   nada, então o realce vem de escurecer levemente a superfície. */
 .btn--primary:hover {
-  background: color-mix(in oklch, var(--primary) 86%, white);
+  background: color-mix(in oklch, var(--primary) 88%, var(--background));
   box-shadow: var(--shadow-xl);
 }
 
@@ -491,7 +506,7 @@ h2 {
 }
 
 .btn--success:hover {
-  background: color-mix(in oklch, var(--success) 88%, white);
+  background: color-mix(in oklch, var(--success) 85%, white);
 }
 
 /* A seta desliza no hover, como o group-hover:translate-x-1 do original. */
@@ -542,7 +557,7 @@ h2 {
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: rgb(255 255 255 / 0.95);
+  background: color-mix(in oklch, var(--surface) 95%, transparent);
   backdrop-filter: blur(4px);
   box-shadow: var(--shadow-2xl);
 }
@@ -638,7 +653,7 @@ h2 {
   padding: 1rem;
   border: 2px solid var(--border);
   border-radius: var(--radius-md);
-  background: #fff;
+  background: var(--surface-raised);
   color: var(--muted-foreground);
   font-size: 0.875rem;
   font-weight: 600;
@@ -708,7 +723,7 @@ h2 {
   padding: 0.5rem 1rem;
   border: 2px solid var(--border);
   border-radius: var(--radius-md);
-  background: #fff;
+  background: var(--surface-raised);
   font-size: 1rem;
   box-shadow: var(--shadow-sm);
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -772,11 +787,16 @@ h2 {
   display: none;
 }
 
+/* transform-box/origin explícitos: em SVG o padrão é a viewBox do elemento,
+   e sem isso o giro sai excêntrico em vez de rodar no próprio centro. */
 .spinner {
   width: 4rem;
   height: 4rem;
   color: var(--primary);
+  transform-box: fill-box;
+  transform-origin: center;
   animation: spin 1s linear infinite;
+  will-change: transform;
 }
 
 @keyframes spin {
@@ -875,7 +895,7 @@ h2 {
   padding: 1rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--secondary-05);
+  background: var(--surface-raised);
 }
 
 .calc__locked svg {
@@ -889,11 +909,13 @@ h2 {
   text-align: left;
 }
 
+/* O card do valor é o clímax do fluxo: no escuro ele ganha o verde da
+   marca em vez do lavado branco, para destacar do restante do cartão. */
 .result-card {
   padding: 1.5rem;
-  border: 2px solid var(--primary-30);
+  border: 2px solid color-mix(in oklch, var(--success) 45%, transparent);
   border-radius: var(--radius-xl);
-  background: var(--primary-05);
+  background: color-mix(in oklch, var(--success) 12%, transparent);
   text-align: center;
 }
 
@@ -903,7 +925,7 @@ h2 {
   justify-content: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
-  color: var(--primary);
+  color: var(--success);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -913,7 +935,7 @@ h2 {
 /* O número é a revelação: entra com escala, um tempo depois do card.
    tabular-nums evita que os dígitos dancem durante a contagem. */
 .result-card__value {
-  color: var(--primary);
+  color: var(--success);
   font-size: clamp(1.5rem, 7vw, 2.25rem);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -931,7 +953,7 @@ h2 {
 .result-card--muted {
   padding: 1.25rem;
   border: 1px solid var(--border);
-  background: var(--secondary-05);
+  background: var(--surface-raised);
 }
 
 .result-card--muted .result-card__value {
@@ -959,7 +981,7 @@ h2 {
   padding: 1.25rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: #fff;
+  background: var(--surface-raised);
 }
 
 .specialist__photo {
@@ -1293,6 +1315,14 @@ h2 {
     animation-delay: 0ms !important; /* senão o backwards segura o conteúdo oculto */
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* O spinner é feedback de estado, não enfeite: zerar a duração o congela
+     numa volta só e passa a impressão de que a tela travou. Reduzir movimento
+     aqui significa girar mais devagar, não parar de girar. */
+  .spinner {
+    animation-duration: 2.4s !important;
+    animation-iteration-count: infinite !important;
   }
 }
 

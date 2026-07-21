@@ -9,6 +9,8 @@
   var OWN_ECOMMERCE_COST = 0.23; // 23%
   var DIFFERENCE = MARKETPLACE_COST - OWN_ECOMMERCE_COST; // 12 pontos percentuais
 
+  var WEBHOOK_URL = "https://hooksfrontx.frontxdigital.com/webhook/calculadora-barbieratto";
+
   var MIN_REVENUE = 10000;
 
   var marketplaces = [
@@ -49,6 +51,8 @@
     niche: "",
     nicheOther: "",
     name: "",
+    email: "",
+    whatsapp: "",
   };
 
   var timers = [];
@@ -343,6 +347,97 @@
     if (message) el.classList.add("animate-fade");
   }
 
+  // -- Webhook --------------------------------------------------------------
+
+  /** Rótulo legível da opção escolhida; "Outro" vira o texto que a pessoa digitou. */
+  function labelFor(items, id, other) {
+    if (id === "outro") return other.trim();
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].id === id) return items[i].label;
+    }
+    return "";
+  }
+
+  /** Parâmetros de campanha da URL — os que vierem vazios não vão no payload. */
+  function trackingParams() {
+    var keys = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+      "gclid",
+      "fbclid",
+    ];
+    var params = new URLSearchParams(window.location.search);
+    var out = {};
+
+    keys.forEach(function (key) {
+      var value = params.get(key);
+      if (value) out[key] = value;
+    });
+
+    return out;
+  }
+
+  function buildPayload() {
+    var revenue = parseCurrency(state.revenue);
+    var annual = revenue * DIFFERENCE;
+    var phoneDigits = state.whatsapp.replace(/\D/g, "");
+
+    return {
+      // Dados de captação
+      nome: state.name.trim(),
+      email: state.email.trim(),
+      whatsapp: state.whatsapp.trim(),
+      whatsapp_e164: phoneDigits ? "+55" + phoneDigits : "",
+
+      // Respostas da calculadora
+      marketplace: labelFor(marketplaces, state.marketplace, state.marketplaceOther),
+      marketplace_id: state.marketplace,
+      nicho: labelFor(niches, state.niche, state.nicheOther),
+      nicho_id: state.niche,
+      faturamento_12m: revenue,
+      faturamento_12m_formatado: brl.format(revenue),
+
+      // Resultado apresentado
+      margem_recuperavel_percentual: Math.round(DIFFERENCE * 100),
+      valor_anual: Math.round(annual * 100) / 100,
+      valor_anual_formatado: brl.format(annual),
+      valor_mensal: Math.round((annual / 12) * 100) / 100,
+      valor_mensal_formatado: brl.format(annual / 12),
+
+      // Contexto
+      origem: "calculadora-barbieratto",
+      pagina: window.location.href,
+      referrer: document.referrer || "",
+      enviado_em: new Date().toISOString(),
+      tracking: trackingParams(),
+    };
+  }
+
+  /**
+   * Envia o lead sem bloquear o fluxo: o diagnóstico aparece na hora e a
+   * falha de rede não trava a pessoa numa tela de erro. keepalive garante
+   * a entrega mesmo se a aba for fechada logo após o submit.
+   */
+  function sendLead() {
+    var payload = buildPayload();
+
+    try {
+      return fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      })["catch"](function () {
+        /* rede indisponível — o diagnóstico segue normalmente */
+      });
+    } catch (err) {
+      return null;
+    }
+  }
+
   // -- Ligações -------------------------------------------------------------
 
   function init() {
@@ -484,6 +579,10 @@
       }
 
       state.name = $("name").value;
+      state.email = $("email").value;
+      state.whatsapp = $("whatsapp").value;
+
+      sendLead();
       setStep("diagnosis");
     });
 
