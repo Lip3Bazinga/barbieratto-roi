@@ -24,6 +24,16 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <!-- Intro: as logos nascem grandes no centro e voam até o topo (FLIP).
+         Fica vazio até o script montar; sem JS, nada disso aparece. -->
+    <div class="intro" id="intro" hidden aria-hidden="true">
+      <div class="intro__texture" id="intro-texture">
+        <span class="intro__beam"></span>
+        <span class="intro__glow"></span>
+      </div>
+      <div class="intro__stage" id="intro-stage"></div>
+    </div>
+
     <main>
       <section class="hero">
         <div class="hero__inner">
@@ -354,6 +364,26 @@
         </div>
       </section>
     </main>
+
+    <!-- Modal de agradecimento: aparece após o clique em agendar. Some sozinho
+         e o site reinicia para a primeira tela. -->
+    <div class="thanks" id="thanks" hidden role="dialog" aria-modal="true" aria-labelledby="thanks-title" aria-describedby="thanks-text">
+      <div class="thanks__card">
+        <span class="thanks__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" />
+          </svg>
+        </span>
+        <h2 class="thanks__title" id="thanks-title">Obrigado!</h2>
+        <p class="thanks__text" id="thanks-text">
+          Abrimos a agenda em uma nova aba para você escolher o melhor horário.
+          Nossa equipe entrará em contato para confirmar sua reunião.
+        </p>
+        <button class="btn btn--primary btn--block" type="button" id="thanks-close">
+          Fechar
+        </button>
+      </div>
+    </div>
 
     <script src="script.js"></script>
   </body>

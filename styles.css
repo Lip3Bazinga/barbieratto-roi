@@ -335,6 +335,181 @@ h2 {
   text-wrap: balance;
 }
 
+/* --------------------------------------------------------------------------
+   Intro das logos (FLIP: grande no centro → posição final no topo)
+   -------------------------------------------------------------------------- */
+
+/* O overlay cobre a tela só durante a intro. O script mede a posição final
+   das placas reais, clona-as aqui e as anima até lá — assim o destino é
+   sempre o layout real, sem offsets fixos que quebrariam no resize. */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  background: var(--background);
+  pointer-events: none;
+}
+
+.intro[hidden] {
+  display: none;
+}
+
+/* Some no fim, revelando a página já montada por baixo. */
+.intro.is-done {
+  animation: intro-fade-out 0.5s var(--ease-out) forwards;
+}
+
+@keyframes intro-fade-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Enquanto a intro roda, a página espera por baixo. As animações da cascata
+   do hero ficam pausadas: sem isso elas terminariam escondidas atrás do
+   overlay e o conteúdo apareceria já assentado, sem entrada nenhuma. */
+.is-intro main {
+  opacity: 0;
+}
+
+.is-intro main *,
+.is-intro main *::before,
+.is-intro main *::after {
+  animation-play-state: paused;
+}
+
+.is-intro.is-intro-revealing main *,
+.is-intro.is-intro-revealing main *::before,
+.is-intro.is-intro-revealing main *::after {
+  animation-play-state: running;
+}
+
+.is-intro.is-intro-revealing main {
+  animation: intro-content-in 0.6s var(--ease-out) forwards;
+}
+
+@keyframes intro-content-in {
+  from {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Textura: brilho central que respira + feixe que varre a tela enquanto
+   as placas encolhem. Tudo em transform/opacity, para ficar no compositor. */
+.intro__texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: texture-in 0.5s var(--ease-out) 0.05s forwards;
+}
+
+@keyframes texture-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Sopro de luz atrás das logos — cresce junto com a entrada. */
+.intro__glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(120vw, 70rem);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--success) 22%, transparent),
+    transparent 62%
+  );
+  transform: scale(0.3);
+  /* Alinhado à coreografia (HOLD 0,85s + encolhimento 1,4s): incha durante o
+     "momento herói" e recua junto com as placas. */
+  animation: glow-swell 2.25s var(--ease-out) forwards;
+}
+
+@keyframes glow-swell {
+  38% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(0.55);
+    opacity: 0;
+  }
+}
+
+/* Feixe diagonal que atravessa a tela uma vez, no meio da transição. */
+.intro__beam {
+  position: absolute;
+  top: -60%;
+  left: -35%;
+  width: 45%;
+  height: 220%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--foreground) 10%, transparent) 45%,
+    color-mix(in oklch, var(--foreground) 16%, transparent) 50%,
+    transparent
+  );
+  rotate: 18deg;
+  filter: blur(6px);
+  /* Varre a tela durante o encolhimento (começa perto do fim do HOLD). */
+  animation: beam-sweep 1.6s var(--ease-out) 0.75s forwards;
+}
+
+@keyframes beam-sweep {
+  from {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  20%,
+  70% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(260vw);
+    opacity: 0;
+  }
+}
+
+/* Palco dos clones: eles são posicionados via JS (left/top/width/height
+   do destino real) e partem do estado grande e centralizado. */
+.intro__stage {
+  position: absolute;
+  inset: 0;
+}
+
+/* transform-origin no canto: o FLIP compõe translate+scale a partir da
+   caixa de destino, então a origem precisa ser o mesmo canto medido. */
+.intro__plate {
+  position: absolute;
+  transform-origin: top left;
+  will-change: transform, opacity;
+  /* Entram desbotadas e assentam no "momento herói": um leve fade+respiro
+     enquanto ficam paradas no centro, antes de começar a encolher. */
+  opacity: 0;
+  transition: opacity 0.55s var(--ease-out);
+}
+
+.intro.is-live .intro__plate {
+  opacity: 1;
+}
+
+/* As placas reais ficam invisíveis (mas ocupando espaço) enquanto os clones
+   voam: visibility em vez de opacity para não reanimar o plate-in ao voltar. */
+.is-intro .hero__initiative--top .hero__initiative-plate {
+  visibility: hidden;
+}
+
 .hero__initiative {
   display: flex;
   flex-direction: column;
@@ -342,9 +517,16 @@ h2 {
   gap: 0.75rem;
 }
 
-/* Versão do topo: entra junto com a cascata do hero, uma placa após a outra. */
+/* Versão do topo: entra junto com a cascata do hero, uma placa após a outra.
+   Quando a intro roda, quem faz a entrada são os clones — o plate-in aqui
+   duplicaria o movimento bem no momento do pouso. */
 .hero__initiative--top .hero__initiative-plate {
   animation: plate-in 0.5s var(--ease-spring) backwards;
+}
+
+.is-intro .hero__initiative--top .hero__initiative-plate,
+.intro__plate {
+  animation: none;
 }
 
 .hero__initiative--top .hero__initiative-plate:nth-child(1) {
@@ -1306,6 +1488,85 @@ h2 {
   animation-play-state: paused;
 }
 
+/* --------------------------------------------------------------------------
+   Modal de agradecimento
+   -------------------------------------------------------------------------- */
+
+.thanks {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: color-mix(in oklch, var(--background) 78%, transparent);
+  backdrop-filter: blur(6px);
+  animation: thanks-overlay-in 0.3s var(--ease-out) forwards;
+}
+
+.thanks[hidden] {
+  display: none;
+}
+
+.thanks.is-leaving {
+  animation: thanks-overlay-out 0.3s var(--ease-out) forwards;
+}
+
+@keyframes thanks-overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes thanks-overlay-out {
+  to {
+    opacity: 0;
+  }
+}
+
+.thanks__card {
+  width: min(28rem, 100%);
+  padding: 2rem;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  animation: thanks-card-in 0.4s var(--ease-out) forwards;
+}
+
+@keyframes thanks-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.96);
+  }
+}
+
+.thanks__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  color: var(--success);
+  background: color-mix(in oklch, var(--success) 15%, transparent);
+}
+
+.thanks__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.thanks__text {
+  margin: 0 0 1.5rem;
+  color: color-mix(in oklch, var(--foreground) 75%, transparent);
+  line-height: 1.55;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1323,6 +1584,48 @@ h2 {
   .spinner {
     animation-duration: 2.4s !important;
     animation-iteration-count: infinite !important;
+  }
+
+  /* A intro tem uma versão calma para quem pede menos movimento (o JS não
+     faz o voo/escala das placas). O que resta é opacidade pura — as logos
+     surgem no lugar e a página revela num fade —, seguro nesse contexto.
+     Sem estas exceções, a regra global acima zeraria os fades e a abertura
+     apareceria e sumiria num piscar. */
+  .intro__plate {
+    transition-duration: 0.55s !important;
+  }
+
+  .is-intro.is-intro-revealing main {
+    /* Fade puro: reusa o keyframe, mas sem o leve scale(0.99) dele. */
+    animation: intro-content-fade 0.5s var(--ease-out) forwards !important;
+  }
+
+  @keyframes intro-content-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .intro.is-done {
+    animation-duration: 0.5s !important;
+  }
+
+  /* Modal: mantém o fade (opacity puro é seguro), sem o translate/scale. */
+  .thanks {
+    animation-duration: 0.3s !important;
+  }
+
+  .thanks__card {
+    animation: thanks-card-fade 0.3s var(--ease-out) forwards !important;
+  }
+
+  @keyframes thanks-card-fade {
+    from {
+      opacity: 0;
+    }
   }
 }
 

@@ -11,6 +11,11 @@
 
   var WEBHOOK_URL = "https://hooksfrontx.frontxdigital.com/webhook/calculadora-barbieratto";
 
+  var SCHEDULE_URL = "https://api.leadconnectorhq.com/widget/bookings/barbieratto-consultoria";
+
+  // Tempo com o modal de agradecimento na tela antes do site reiniciar.
+  var THANKS_DURATION = 4000;
+
   var MIN_REVENUE = 10000;
 
   var marketplaces = [
@@ -347,6 +352,167 @@
     if (message) el.classList.add("animate-fade");
   }
 
+  // -- Intro das logos ------------------------------------------------------
+
+  /**
+   * Entrada estilo Apple: as logos surgem grandes no centro e encolhem até a
+   * posição real delas no topo.
+   *
+   * FLIP (First, Last, Invert, Play): em vez de adivinhar coordenadas, mede a
+   * caixa final das placas já renderizadas, clona-as num overlay e aplica a
+   * transformação inversa (centro + escala grande). Ao soltar, elas "caem" no
+   * lugar exato — o destino continua certo em qualquer viewport ou resize.
+   */
+  function runIntro() {
+    var intro = $("intro");
+    var stage = $("intro-stage");
+    var plates = document.querySelectorAll(".hero__initiative--top .hero__initiative-plate");
+
+    if (!intro || !stage || !plates.length) return;
+
+    var root = document.documentElement;
+    root.classList.add("is-intro");
+    intro.hidden = false;
+
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+
+    var first = [];
+    plates.forEach(function (plate) {
+      first.push(plate.getBoundingClientRect());
+    });
+
+    // Caixa que envolve o conjunto das placas na posição final.
+    var groupLeft = Math.min.apply(null, first.map(function (r) { return r.left; }));
+    var groupRight = Math.max.apply(null, first.map(function (r) { return r.right; }));
+    var groupTop = Math.min.apply(null, first.map(function (r) { return r.top; }));
+    var groupBottom = Math.max.apply(null, first.map(function (r) { return r.bottom; }));
+
+    var groupWidth = groupRight - groupLeft;
+    var groupHeight = groupBottom - groupTop;
+    if (!groupWidth || !groupHeight) return;
+
+    // Ocupa o centro da tela: alvo limitado pela largura e pela altura, para
+    // não estourar em telas estreitas nem em telas baixas (paisagem no mobile).
+    var targetWidth = Math.min(vw * 0.72, 900);
+    var targetHeight = Math.min(vh * 0.55, targetWidth * (groupHeight / groupWidth));
+    var scale = Math.min(targetWidth / groupWidth, targetHeight / groupHeight);
+
+    // Centros: do conjunto (posição final) e da viewport (posição herói).
+    var gcx = (groupLeft + groupRight) / 2;
+    var gcy = (groupTop + groupBottom) / 2;
+    var vcx = vw / 2;
+    var vcy = vh / 2;
+
+    var clones = [];
+
+    plates.forEach(function (plate, i) {
+      var rect = first[i];
+      var clone = plate.cloneNode(true);
+      clone.className = "hero__initiative-plate intro__plate";
+
+      // O clone nasce exatamente sobre o destino final...
+      clone.style.left = rect.left + "px";
+      clone.style.top = rect.top + "px";
+      clone.style.width = rect.width + "px";
+      clone.style.height = rect.height + "px";
+
+      // ...e "inverte" para o estado grande e centralizado. Cada placa é
+      // escalada em torno do centro do conjunto e o conjunto é levado ao
+      // centro da tela — assim as duas mantêm o mesmo arranjo, só que enorme.
+      // Com transform-origin no canto, tx/ty são o quanto o canto superior
+      // esquerdo precisa andar até a sua posição ampliada.
+      var mappedLeft = gcx + scale * (rect.left - gcx) + (vcx - gcx);
+      var mappedTop = gcy + scale * (rect.top - gcy) + (vcy - gcy);
+      var tx = mappedLeft - rect.left;
+      var ty = mappedTop - rect.top;
+
+      clone.style.transform =
+        "translate(" + tx + "px, " + ty + "px) scale(" + scale + ")";
+
+      stage.appendChild(clone);
+      clones.push(clone);
+    });
+
+    // Movimento reduzido: mantemos uma abertura, mas sem o voo/escala das
+    // placas — só um fade delas no lugar final e a revelação da página. Fade
+    // é considerado seguro para quem pede menos movimento; o que evitamos é o
+    // deslocamento grande. Os clones ficam parados (transform já é o final).
+    if (reducedMotion.matches) {
+      clones.forEach(function (clone) {
+        clone.style.transform = "translate(0, 0) scale(1)";
+      });
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          intro.classList.add("is-live");
+        });
+      });
+
+      var revealCalm = setTimeout(function () {
+        root.classList.add("is-intro-revealing");
+      }, 700);
+
+      var doneCalm = setTimeout(function () {
+        finishIntro(intro, root);
+      }, 1100);
+
+      timers.push(revealCalm, doneCalm);
+      return;
+    }
+
+    // Coreografia (ms a partir daqui):
+    //   0    → placas grandes e paradas no centro (o "momento herói")
+    //   HOLD → começam a encolher rumo à posição final
+    //   +DUR → chegaram; a página já apareceu por baixo no meio do caminho
+    var HOLD = 850; // tempo paradas, grandes, antes de encolher
+    var DURATION = 1400; // duração do encolhimento
+    var REVEAL_LEAD = 550; // quanto antes do fim a página surge
+
+    // Uma classe extra na intro dispara a entrada dos clones (fade+leve zoom),
+    // para eles não "piscarem" prontos no primeiro frame com o cache quente.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        intro.classList.add("is-live");
+      });
+    });
+
+    // Play: só depois do HOLD soltamos a transformação. Como a transição é
+    // definida agora (e não no primeiro frame), o navegador tem certeza do
+    // estado inicial pintado e interpola de verdade — sem pular direto ao fim.
+    var play = setTimeout(function () {
+      clones.forEach(function (clone, i) {
+        clone.style.transition =
+          "transform " + DURATION + "ms cubic-bezier(0.62, 0.02, 0.16, 1) " + i * 0.09 + "s";
+        clone.style.transform = "translate(0, 0) scale(1)";
+      });
+    }, HOLD);
+
+    // Revela a página um pouco antes do pouso: as logos chegam sobre o
+    // conteúdo já visível, em vez de tudo aparecer de uma vez.
+    var reveal = setTimeout(function () {
+      root.classList.add("is-intro-revealing");
+    }, HOLD + DURATION - REVEAL_LEAD);
+
+    var done = setTimeout(function () {
+      finishIntro(intro, root);
+    }, HOLD + DURATION);
+
+    timers.push(play, reveal, done);
+  }
+
+  function finishIntro(intro, root) {
+    root.classList.add("is-intro-revealing");
+    intro.classList.add("is-done");
+
+    var t = setTimeout(function () {
+      intro.hidden = true;
+      root.classList.remove("is-intro", "is-intro-revealing");
+    }, 520);
+
+    timers.push(t);
+  }
+
   // -- Webhook --------------------------------------------------------------
 
   /** Rótulo legível da opção escolhida; "Outro" vira o texto que a pessoa digitou. */
@@ -436,6 +602,94 @@
     } catch (err) {
       return null;
     }
+  }
+
+  // -- Reinício e agradecimento --------------------------------------------
+
+  /** Zera o estado e todos os campos, deixando o fluxo pronto pra recomeçar. */
+  function resetState() {
+    state.step = "marketplace";
+    state.marketplace = "";
+    state.marketplaceOther = "";
+    state.revenue = "";
+    state.niche = "";
+    state.nicheOther = "";
+    state.name = "";
+    state.email = "";
+    state.whatsapp = "";
+
+    // Opções: tira a marcação e some com os campos "Outro".
+    ["marketplace", "niche"].forEach(function (key) {
+      Array.prototype.forEach.call($(key + "-options").children, function (el) {
+        el.setAttribute("aria-pressed", "false");
+        el.classList.remove("is-picked");
+      });
+      $(key + "-other").value = "";
+      $(key + "-other-field").hidden = true;
+      syncGate(key);
+    });
+
+    // Campos de texto e seus erros.
+    ["revenue", "name", "email", "whatsapp"].forEach(function (id) {
+      $(id).value = "";
+      $(id).classList.remove("has-error");
+    });
+    ["revenue", "email", "whatsapp"].forEach(function (id) {
+      var err = $(id + "-error");
+      err.textContent = "";
+      err.hidden = true;
+    });
+    leadSubmit.disabled = true;
+  }
+
+  /** Volta o site para a primeira tela (hero + botão "Começar a análise"). */
+  function resetToStart() {
+    var heroContent = document.querySelector(".hero__content");
+
+    // Esconde a calculadora e reexibe o hero como estava no início.
+    calc.hidden = true;
+    calc.classList.remove("is-entering");
+    calc.parentElement.classList.remove("is-revealed");
+
+    startBlock.hidden = false;
+    startBlock.classList.remove("is-leaving");
+    heroContent.hidden = false;
+    heroContent.classList.remove("is-leaving");
+    startBtn.setAttribute("aria-expanded", "false");
+
+    resetState();
+    setStep("marketplace");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  var thanks = $("thanks");
+  var thanksTimer = null;
+
+  function closeThanks() {
+    if (thanks.hidden) return;
+    if (thanksTimer) {
+      clearTimeout(thanksTimer);
+      thanksTimer = null;
+    }
+
+    thanks.classList.add("is-leaving");
+    var t = setTimeout(function () {
+      thanks.hidden = true;
+      thanks.classList.remove("is-leaving");
+      resetToStart();
+    }, 300);
+    timers.push(t);
+  }
+
+  function openThanks() {
+    thanks.hidden = false;
+    thanks.classList.remove("is-leaving");
+    $("thanks-close").focus({ preventScroll: true });
+
+    // Fecha sozinho e reinicia; o usuário também pode fechar antes no botão.
+    thanksTimer = setTimeout(closeThanks, THANKS_DURATION);
+    timers.push(thanksTimer);
   }
 
   // -- Ligações -------------------------------------------------------------
@@ -539,6 +793,26 @@
       setStep("capture");
     });
 
+    $("schedule").addEventListener("click", function () {
+      // Mostra o agradecimento primeiro: assim o modal aparece mesmo que o
+      // navegador bloqueie o popup ou window.open falhe por alguma política.
+      openThanks();
+
+      // Abre a agenda em nova aba; se o popup for bloqueado, não trava o fluxo.
+      try {
+        window.open(SCHEDULE_URL, "_blank", "noopener");
+      } catch (err) {
+        /* popup bloqueado — o modal e o reinício seguem normalmente */
+      }
+    });
+
+    $("thanks-close").addEventListener("click", closeThanks);
+
+    // Esc fecha o modal (e reinicia), como esperado num diálogo.
+    thanks.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeThanks();
+    });
+
     document.querySelectorAll("[data-back]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         setStep(state.step === "revenue" ? "marketplace" : "revenue");
@@ -596,6 +870,22 @@
     });
 
     setStep("marketplace");
+
+    // As logos são imagens: medir antes de carregarem daria caixas erradas.
+    // window.load garante layout estável; o timeout evita que uma imagem
+    // lenta segure a intro para sempre.
+    if (document.readyState === "complete") {
+      runIntro();
+    } else {
+      var started = false;
+      var start = function () {
+        if (started) return;
+        started = true;
+        runIntro();
+      };
+      window.addEventListener("load", start, { once: true });
+      timers.push(setTimeout(start, 1200));
+    }
   }
 
   if (document.readyState === "loading") {
