@@ -140,31 +140,6 @@ h2 {
   pointer-events: none;
 }
 
-/* Anéis decorativos só onde há vazio de verdade; no mobile cruzariam o texto. */
-@media (min-width: 768px) {
-  .hero::after {
-    background:
-      radial-gradient(ellipse at top left, var(--primary-10), transparent 50%),
-      radial-gradient(
-        ellipse at bottom right,
-        color-mix(in oklch, var(--success) 9%, transparent),
-        transparent 55%
-      ),
-      radial-gradient(
-        circle at 86% 22%,
-        transparent 6.9rem,
-        color-mix(in oklch, var(--success) 24%, transparent) 7rem,
-        transparent 7.2rem
-      ),
-      radial-gradient(
-        circle at 2% 94%,
-        transparent 4.4rem,
-        var(--primary-10) 4.5rem,
-        transparent 4.7rem
-      );
-  }
-}
-
 /* min-height (não height): no desktop preenche a viewport exata; no
    mobile, onde o conteúdo passa de uma tela, cresce sem cortar nada. */
 .hero__inner {
@@ -1130,6 +1105,18 @@ h2 {
     opacity: 0;
     transform: scale(0.6);
   }
+}
+
+/* Variante negativa: o valor "perdido" no ano ganha a cor de alerta (vermelho)
+   em vez do verde, reforçando que é uma margem que ficou pelo caminho. */
+.result-card--negative {
+  border-color: color-mix(in oklch, var(--destructive) 45%, transparent);
+  background: color-mix(in oklch, var(--destructive) 12%, transparent);
+}
+
+.result-card--negative .result-card__label,
+.result-card--negative .result-card__value {
+  color: var(--destructive);
 }
 
 .result-card--muted {
