@@ -59,6 +59,8 @@ com UTMs, `gclid` e `fbclid` quando presentes na URL).
 ## Notas
 
 - A calculadora depende de JavaScript; sem ele, um aviso aparece no lugar.
-- O botão "Quero agendar uma reunião" ainda não tem ação: falta definir o destino
-  (link do Calendly, WhatsApp etc.).
+- O botão "Quero agendar uma reunião" abre a agenda (`SCHEDULE_URL`, no topo de
+  `script.js`) em nova aba, mostra o modal de agradecimento e reinicia o fluxo.
+- Página pensada para acesso via QR code em evento: `noindex, nofollow` no
+  `<head>` (SEO e tráfego pago não se aplicam).
 - A versão anterior em Next.js está no histórico, no commit `4d32cef`.
